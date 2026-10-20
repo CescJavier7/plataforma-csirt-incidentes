@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Centro de Operaciones de Seguridad (SOC) del Hospital Clínico San Rafael. Plataforma de monitoreo, triaje y registro accesible de incidentes de ciberseguridad sanitaria.">
+  <title>SOC Hospitalario | Hospital Clínico San Rafael &mdash; Seguridad de la Información</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       1. ENLACE DE SALTO ACCESIBLE (WCAG 2.4.1 - Bypass Blocks)
+       Permite a usuarios de lectores de pantalla y navegación por teclado
+       acceder directamente al contenido central sin recorrer la cabecera.
+       ========================================================================= -->
+  <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- =========================================================================
+       2. ENCABEZADO INSTITUCIONAL (HEADER SEMÁNTICO - FLEXBOX 1D)
+       Identidad institucional del SOC en entorno hospitalario y navegación primaria.
+       ========================================================================= -->
+  <header class="site-header" role="banner">
+    <div class="header-brand">
+      <span class="soc-logo-icon" aria-hidden="true">🏥</span>
+      <div>
+        <h1>SOC &bull; Hospital Clínico San Rafael</h1>
+        <p class="header-subtitle">CSIRT de Infraestructura Crítica Sanitaria &mdash; Vigilancia 24/7</p>
+      </div>
+      <span class="badge-soc" aria-label="Estado operativo del hospital">DEFCON 2 &bull; Alerta Sanitaria Activa</span>
+    </div>
+
+    <!-- Navegación Primaria Accesible -->
+    <nav class="main-nav" aria-label="Navegación principal del SOC Hospitalario">
+      <ul>
+        <li><a href="#sec-monitoreo" class="nav-link" aria-current="page">Monitoreo Clínico IoMT</a></li>
+        <li><a href="#sec-registro" class="nav-link">Registrar Incidente</a></li>
+        <li><a href="#sec-metricas" class="nav-link">Telemetría Asistencial</a></li>
+        <li><a href="#sec-protocolos" class="nav-link">Protocolo Soporte Vital</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =========================================================================
+       3. CONTENEDOR PRINCIPAL (MAIN - ARQUITECTURA CERO DIVITIS)
+       Distribución bidimensional directa mediante CSS Grid (grid-template-areas)
+       sin divs estructurales intermedios.
+       ========================================================================= -->
+  <main id="contenido-principal" class="layout-container">
+
+    <!-- -----------------------------------------------------------------------
+         SECCIÓN A: PANEL DE MONITOREO CLÍNICO EN TIEMPO REAL
+         Estructura tabular accesible para el seguimiento de vectores de ataque.
+         ----------------------------------------------------------------------- -->
+    <section id="sec-monitoreo" class="panel-section" aria-labelledby="titulo-monitoreo">
+      <header class="panel-header">
+        <h2 id="titulo-monitoreo" class="panel-title">Matriz de Incidentes y Amenazas a la Red Médica</h2>
+        <span class="live-indicator" aria-label="Transmisión de telemetría médica en tiempo real activa">
+          <span class="pulse-dot" aria-hidden="true"></span> Sondas IoMT Activas
+        </span>
+        <p class="panel-description">
+          Supervisión continua sobre sistemas HIS/EHR, servidores PACS/DICOM, redes de telemetría de UCI y dispositivos médicos conectados.
+        </p>
+      </header>
+
+      <!-- Tabla accesible de alertas con scopes semánticos y doble codificación -->
+      <div class="table-responsive" role="region" aria-labelledby="titulo-monitoreo" tabindex="0">
+        <table class="soc-table">
+          <caption class="sr-only">Listado de incidentes de ciberseguridad hospitalaria en curso y su estado de contención asistencial</caption>
+          <thead>
+            <tr>
+              <th scope="col">Ticket</th>
+              <th scope="col">Detección</th>
+              <th scope="col">Vector / Amenaza</th>
+              <th scope="col">Servicio Hospitalario</th>
+              <th scope="col">Severidad</th>
+              <th scope="col">Estado Asistencial</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row" class="font-mono">INC-2041</th>
+              <td><time datetime="2026-09-11T11:20:00">11/09/2026 11:20</time></td>
+              <td>Intento de Ransomware en Servidor HIS (Historias Clínicas)</td>
+              <td class="font-mono">Servidor Central EHR / Archivo</td>
+              <td>
+                <span class="badge-severity severity-critical">
+                  <span class="severity-icon" aria-hidden="true">🔴</span> Crítica (Riesgo Vital)
+                </span>
+              </td>
+              <td><span class="status-tag status-containment">Aislamiento VLAN</span></td>
+            </tr>
+            <tr>
+              <th scope="row" class="font-mono">INC-2040</th>
+              <td><time datetime="2026-09-11T10:35:00">11/09/2026 10:35</time></td>
+              <td>Anomalía de Tráfico en Pasarela IoMT (Bombas de Infusión)</td>
+              <td class="font-mono">Pabellón UCI &mdash; Cama 04 a 12</td>
+              <td>
+                <span class="badge-severity severity-high">
+                  <span class="severity-icon" aria-hidden="true">🟠</span> Alta
+                </span>
+              </td>
+              <td><span class="status-tag status-investigating">Inspección Biomédica</span></td>
+            </tr>
+            <tr>
+              <th scope="row" class="font-mono">INC-2039</th>
+              <td><time datetime="2026-09-11T09:12:00">11/09/2026 09:12</time></td>
+              <td>Fuga Potencial en Servidor PACS (Imágenes Radiológicas/DICOM)</td>
+              <td class="font-mono">Imagenología / Tomografía TAC</td>
+              <td>
+                <span class="badge-severity severity-medium">
+                  <span class="severity-icon" aria-hidden="true">🟡</span> Media
+                </span>
+              </td>
+              <td><span class="status-tag status-mitigated">Bloqueo IP Externa</span></td>
+            </tr>
+            <tr>
+              <th scope="row" class="font-mono">INC-2038</th>
+              <td><time datetime="2026-09-11T07:45:00">11/09/2026 07:45</time></td>
+              <td>Campaña de Spear Phishing a Personal de Farmacia y Urgencias</td>
+              <td class="font-mono">Estaciones Dispensación Farmacia</td>
+              <td>
+                <span class="badge-severity severity-low">
+                  <span class="severity-icon" aria-hidden="true">🟢</span> Baja
+                </span>
+              </td>
+              <td><span class="status-tag status-closed">Mitigado / Credenciales Revocadas</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         SECCIÓN B: FORMULARIO DE TRIAJE Y REGISTRO DE INCIDENTES CLÍNICOS
+         Cumplimiento estricto WCAG 2.2 AA y Validación Nativa HTML5.
+         Se eliminó el atributo novalidate para respetar la validación en cliente.
+         ----------------------------------------------------------------------- -->
+    <section id="sec-registro" class="panel-section" aria-labelledby="titulo-registro">
+      <header class="panel-header">
+        <h2 id="titulo-registro" class="panel-title">Formulario Oficial de Triaje de Ciberseguridad Hospitalaria</h2>
+        <p class="panel-description">
+          Registre eventos que amenacen la confidencialidad de los pacientes o la continuidad de los servicios médicos. Los campos obligatorios se identifican con (<span class="required-indicator" aria-hidden="true">*</span>).
+        </p>
+      </header>
+
+      <form action="#" method="post" class="incident-form">
+
+        <!-- GRUPO 1: IDENTIFICACIÓN Y CATEGORIZACIÓN CLÍNICA -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend">1. Identificación y Clasificación del Incidente Clínico</legend>
+          
+          <div class="form-row">
+            <!-- Código de Incidente con formato oficial -->
+            <div class="form-group">
+              <label for="codigo-incidente" class="form-label">
+                Código de Incidente <span class="required-indicator" aria-hidden="true">*</span>
+                <span class="sr-only">(Campo obligatorio)</span>
+              </label>
+              <input 
+                type="text" 
+                id="codigo-incidente" 
+                name="codigo_incidente" 
+                class="form-control font-mono" 
+                required 
+                placeholder="INC-2042" 
+                pattern="INC-[0-9]{4}" 
+                maxlength="8" 
+                aria-describedby="help-codigo"
+                autocomplete="off"
+              >
+              <small id="help-codigo" class="form-help">
+                Formato hospitalario obligatorio: <code>INC-</code> seguido de 4 dígitos (ejemplo: <code>INC-2042</code>).
+              </small>
+            </div>
+
+            <!-- Fecha y Hora del Suceso -->
+            <div class="form-group">
+              <label for="fecha-deteccion" class="form-label">
+                Fecha y Hora de Detección <span class="required-indicator" aria-hidden="true">*</span>
+                <span class="sr-only">(Campo obligatorio)</span>
+              </label>
+              <input 
+                type="datetime-local" 
+                id="fecha-deteccion" 
+                name="fecha_deteccion" 
+                class="form-control" 
+                required 
+                aria-describedby="help-fecha"
+              >
+              <small id="help-fecha" class="form-help">
+                Estampa cronológica exacta registrada por el personal de guardia o sondas EDR.
+              </small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Categoría de Amenaza Sanitaria -->
+            <div class="form-group">
+              <label for="categoria-amenaza" class="form-label">
+                Categoría de la Amenaza Sanitaria <span class="required-indicator" aria-hidden="true">*</span>
+                <span class="sr-only">(Campo obligatorio)</span>
+              </label>
+              <select id="categoria-amenaza" name="categoria_amenaza" class="form-control" required aria-describedby="help-categoria">
+                <option value="" disabled selected>Seleccione el vector de riesgo médico</option>
+                <option value="ransomware-ehr">Ransomware / Secuestro de Historias Clínicas (EHR/HIS)</option>
+                <option value="intrusio-iomt">Intrusión en Dispositivos Médicos Conectados (IoMT / UCI)</option>
+                <option value="fuga-pacs">Exfiltración de Imágenes Médicas / Servidor PACS-DICOM</option>
+                <option value="phishing-sanitario">Ingeniería Social a Personal Clínico / Credenciales</option>
+                <option value="dos-triaje">Denegación de Servicio (DoS) en Admisión y Urgencias</option>
+                <option value="acceso-farmacia">Manipulación No Autorizada en Dispensación de Fármacos</option>
+                <option value="falla-perimetral">Afectación en Conectividad VPN Interhospitalaria</option>
+              </select>
+              <small id="help-categoria" class="form-help">
+                Clasificación de amenazas conforme a marcos de ciberseguridad sanitaria (NIST / ENISA).
+              </small>
+            </div>
+
+            <!-- Nivel de Severidad e Impacto en Pacientes -->
+            <div class="form-group">
+              <label for="nivel-severidad" class="form-label">
+                Severidad e Impacto en la Atención <span class="required-indicator" aria-hidden="true">*</span>
+                <span class="sr-only">(Campo obligatorio)</span>
+              </label>
+              <select id="nivel-severidad" name="nivel_severidad" class="form-control" required aria-describedby="help-severidad">
+                <option value="" disabled selected>Evalúe el riesgo asistencial</option>
+                <option value="baja">Baja &mdash; Sin impacto en consultas ni en seguridad del paciente</option>
+                <option value="media">Media &mdash; Lentitud en sistemas no críticos / Afectación administrativa</option>
+                <option value="alta">Alta &mdash; Falla parcial en diagnóstico, laboratorio o farmacia</option>
+                <option value="critica">Crítica (Riesgo Vital) &mdash; Parada en quirófanos, UCI o pérdida total de HIS</option>
+              </select>
+              <small id="help-severidad" class="form-help">
+                Define el nivel de escalamiento médico de emergencia y el tiempo límite de contención.
+              </small>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <!-- GRUPO 2: ACTIVO MÉDICO Y SERVICIO AFECTADO -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend">2. Activo Hospitalario y Atribución Técnica</legend>
+
+          <div class="form-row">
+            <!-- Servicio Hospitalario Afectado -->
+            <div class="form-group">
+              <label for="servicio-hospitalario" class="form-label">
+                Servicio / Unidad Clínica Afectada <span class="required-indicator" aria-hidden="true">*</span>
+                <span class="sr-only">(Campo obligatorio)</span>
+              </label>
+              <select id="servicio-hospitalario" name="servicio_hospitalario" class="form-control" required aria-describedby="help-servicio">
+                <option value="" disabled selected>Seleccione el área del hospital</option>
+                <option value="uci">Unidad de Cuidados Intensivos (UCI / Reanimación)</option>
+                <option value="quirofanos">Bloque Quirúrgico / Quirófanos Centrales</option>
+                <option value="urgencias">Servicio de Urgencias y Triaje de Pacientes</option>
+                <option value="hospitalizacion">Pisos de Hospitalización General</option>
+                <option value="radiologia">Radiología e Imagen Diagnóstica (TAC / Resonancia)</option>
+                <option value="farmacia">Farmacia Hospitalaria y Almacén Automatizado</option>
+                <option value="laboratorio">Laboratorio Clínico y Banco de Sangre</option>
+                <option value="administracion">Admisión, Facturación y Dirección Médica</option>
+              </select>
+              <small id="help-servicio" class="form-help">
+                Permite priorizar planes de contingencia asistencial y activación de papel.
+              </small>
+            </div>
+
+            <!-- Activo, IP o Equipo Médico Afectado -->
+            <div class="form-group">
+              <label for="activo-afectado" class="form-label">
+                Identificador de Red o Activo Médico <span class="required-indicator" aria-hidden="true">*</span>
+                <span class="sr-only">(Campo obligatorio)</span>
+              </label>
+              <input 
+                type="text" 
+                id="activo-afectado" 
+                name="activo_afectado" 
+                class="form-control font-mono" 
+                required 
+                minlength="3" 
+                maxlength="60" 
+                placeholder="Ej: gw-iomt-uci02 o 10.10.45.18" 
+                aria-describedby="help-activo"
+              >
+              <small id="help-activo" class="form-help">
+                Dirección IP estática, hostname en CMDB médica o número de serie biomédico.
+              </small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Analista o Guardia SOC Responsable -->
+            <div class="form-group">
+              <label for="analista-soc" class="form-label">
+                Analista / Responsable del Reporte <span class="required-indicator" aria-hidden="true">*</span>
+                <span class="sr-only">(Campo obligatorio)</span>
+              </label>
+              <input 
+                type="text" 
+                id="analista-soc" 
+                name="analista_soc" 
+                class="form-control" 
+                required 
+                minlength="4" 
+                maxlength="50" 
+                placeholder="Ej: Ing. Carlos Vaca &mdash; Guardia SOC Salud" 
+                aria-describedby="help-analista"
+              >
+              <small id="help-analista" class="form-help">
+                Nombre y rol técnico del operador que tramita el incidente.
+              </small>
+            </div>
+
+            <!-- Contacto Médico de Enlace -->
+            <div class="form-group">
+              <label for="medico-enlace" class="form-label">
+                Médico o Supervisor de Guardia en Turno
+              </label>
+              <input 
+                type="text" 
+                id="medico-enlace" 
+                name="medico_enlace" 
+                class="form-control" 
+                maxlength="50" 
+                placeholder="Ej: Dra. Elena Morales &mdash; Jefa UCI Guardia" 
+                aria-describedby="help-medico"
+              >
+              <small id="help-medico" class="form-help">
+                Profesional asistencial de referencia en el servicio afectado para coordinar contingencia.
+              </small>
+            </div>
+          </div>
+
+          <!-- Dimensiones Comprometidas en Salud (Tríada CIA en Entorno Sanitario) -->
+          <fieldset class="form-sub-fieldset">
+            <legend class="form-sub-legend">Impacto en la Seguridad de la Información Clínica (Tríada CIA):</legend>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" name="triada_c" value="confidencialidad">
+                <span><strong>Confidencialidad:</strong> Divulgación no autorizada de historiales clínicos (EHR / HIPAA).</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="triada_i" value="integridad">
+                <span><strong>Integridad:</strong> Alteración de dosis de medicamentos, resultados de laboratorio o signos vitales.</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="triada_a" value="disponibilidad">
+                <span><strong>Disponibilidad:</strong> Imposibilidad de consultar historiales médicos o caída de monitores en quirófano.</span>
+              </label>
+            </div>
+          </fieldset>
+
+        </fieldset>
+
+        <!-- GRUPO 3: EVIDENCIA TÉCNICA Y PROTOCOLOS ASISTENCIALES -->
+        <fieldset class="form-fieldset">
+          <legend class="form-legend">3. Evidencia Forense y Medidas Inmediatas de Protección Asistencial</legend>
+
+          <!-- Descripción Técnica de los Hechos -->
+          <div class="form-group">
+            <label for="descripcion-incidente" class="form-label">
+              Descripción Técnica y Hallazgos Forenses <span class="required-indicator" aria-hidden="true">*</span>
+              <span class="sr-only">(Campo obligatorio)</span>
+            </label>
+            <textarea 
+              id="descripcion-incidente" 
+              name="descripcion_incidente" 
+              class="form-control font-mono" 
+              rows="5" 
+              required 
+              minlength="25" 
+              maxlength="1500" 
+              placeholder="Describa el comportamiento anómalo, direcciones IP sospechosas, hashes de archivos o alertas en el servidor PACS/HIS..." 
+              aria-describedby="help-descripcion"
+            ></textarea>
+            <small id="help-descripcion" class="form-help">
+              Mínimo 25 caracteres. Detalle si hubo necesidad de pasar a registros médicos manuales en papel.
+            </small>
+          </div>
+
+          <!-- Acciones de Contención Ejecutadas -->
+          <div class="form-group">
+            <label for="acciones-inmediatas" class="form-label">
+              Acciones Inmediatas de Contención Realizadas <span class="required-indicator" aria-hidden="true">*</span>
+              <span class="sr-only">(Campo obligatorio)</span>
+            </label>
+            <textarea 
+              id="acciones-inmediatas" 
+              name="acciones_inmediatas" 
+              class="form-control" 
+              rows="3" 
+              required 
+              minlength="15" 
+              maxlength="800" 
+              placeholder="Ejemplo: Se aisló la VLAN de Imagenología, se activó el protocolo de triaje en papel y se notificó a Ingeniería Biomédica..." 
+              aria-describedby="help-acciones"
+            ></textarea>
+            <small id="help-acciones" class="form-help">
+              Especifique medidas adoptadas para resguardar la seguridad física de los pacientes mientras se contiene la amenaza.
+            </small>
+          </div>
+
+          <!-- Carga de Archivos de Evidencia Forense (Dimensión 3 del Auditor) -->
+          <div class="form-group">
+            <label for="archivo-evidencia" class="form-label">
+              Adjuntar Archivo de Trazas, Logs o Captura de Red Forense
+            </label>
+            <input 
+              type="file" 
+              id="archivo-evidencia" 
+              name="archivo_evidencia" 
+              class="form-control" 
+              accept=".log,.pcap,.json,.txt,.csv,.hl7,.dcm" 
+              aria-describedby="help-archivo"
+            >
+            <small id="help-archivo" class="form-help">
+              Formatos médicos y forenses admitidos como sanitización perimetral: <code>.log</code>, <code>.pcap</code>, <code>.json</code>, <code>.txt</code>, <code>.csv</code>, <code>.hl7</code>, <code>.dcm</code> (Máximo 15 MB).
+            </small>
+          </div>
+
+          <!-- Confirmación de Custodia y Resguardo Sanitario (Vinculación Explícita for/id) -->
+          <div class="form-group">
+            <label for="check-custodia" class="checkbox-label checkbox-custodia">
+              <input type="checkbox" id="check-custodia" name="check_custodia" required aria-describedby="help-custodia">
+              <span><strong>Certifico la Preservación de Evidencias Digitales y el estricto apego al Secreto Médico y Ley de Protección de Datos de Salud.</strong></span>
+            </label>
+            <small id="help-custodia" class="form-help">
+              Obligatorio para garantizar la validez legal del dictamen forense y el respeto a la confidencialidad clínica.
+            </small>
+          </div>
+
+        </fieldset>
+
+        <!-- BOTONES DE ACCIÓN ACCESIBLES (FLEXBOX 1D) -->
+        <div class="form-actions">
+          <button type="reset" class="btn btn-secondary">
+            <span aria-hidden="true">🔄</span> Limpiar Formulario
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <span aria-hidden="true">🚨</span> Registrar Incidente y Alertar a Comité Hospitalario
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- =======================================================================
+         4. PANEL LATERAL (ASIDE SEMÁNTICO - TELEMETRÍA Y PROTOCOLOS MÉDICOS)
+         Información complementaria de soporte vital y canales de emergencia.
+         ======================================================================= -->
+    <aside class="sidebar-panel" aria-labelledby="titulo-panel-lateral">
+      
+      <h2 id="titulo-panel-lateral" class="sr-only">Telemetría Clínica y Protocolos de Seguridad Hospitalaria</h2>
+
+      <!-- Tarjeta 1: Telemetría de Servicios Críticos del Hospital -->
+      <article id="sec-metricas" class="status-card" aria-labelledby="titulo-telemetria">
+        <header class="status-card-header">
+          <h3 id="titulo-telemetria">Disponibilidad de Red Hospitalaria</h3>
+          <span class="badge-status-online" aria-label="Estado operativo">Red Clínica Online</span>
+        </header>
+        
+        <div class="metric-item">
+          <div class="metric-label-row">
+            <span>Disponibilidad Servidores HIS/EHR</span>
+            <strong class="font-mono text-success">99.95%</strong>
+          </div>
+          <progress class="soc-progress" value="99" max="100" aria-label="Disponibilidad de historias clínicas al 99%"></progress>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label-row">
+            <span>Sensores IoMT Monitorizados</span>
+            <strong class="font-mono">148 Dispositivos</strong>
+          </div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label-row">
+            <span>Tiempo Medio de Aislamiento (MTTC)</span>
+            <strong class="font-mono">4.2 min</strong>
+          </div>
+        </div>
+
+        <div class="metric-item">
+          <div class="metric-label-row">
+            <span>Copia Inmutable de Respaldo</span>
+            <strong class="font-mono text-success">Completada (Hace 35 min)</strong>
+          </div>
+        </div>
+      </article>
+
+      <!-- Tarjeta 2: Protocolo de Respuesta en Incidentes de Soporte Vital -->
+      <article id="sec-protocolos" class="status-card" aria-labelledby="titulo-protocolos">
+        <header class="status-card-header">
+          <h3 id="titulo-protocolos">Protocolo Sanitario NIST SP 800-61</h3>
+          <span class="badge-framework">Respaldo Médico</span>
+        </header>
+
+        <p class="card-intro-text">Acciones prioritarias ante ciberataque a infraestructura asistencial:</p>
+
+        <ol class="protocol-steps">
+          <li>
+            <strong>1. Protección Vital:</strong>
+            <p>Verificar que equipos de soporte en UCI y Quirófano operen en modalidad autónoma/local sin dependencia de red.</p>
+          </li>
+          <li>
+            <strong>2. Aislamiento Lógico:</strong>
+            <p>Segmentar VLAN de imagenología y administración sin apagar servidores que contengan historiales clínicos abiertos.</p>
+          </li>
+          <li>
+            <strong>3. Activación Modo Papel:</strong>
+            <p>Distribuir formularios impresos de triaje y recetas de emergencia al servicio de Urgencias y Farmacia.</p>
+          </li>
+          <li>
+            <strong>4. Restauración Inmutable:</strong>
+            <p>Recuperar datos clínicos desde repositorios air-gapped certificados antes de reconectar a la red corporativa.</p>
+          </li>
+        </ol>
+      </article>
+
+      <!-- Tarjeta 3: Contactos Médicos de Emergencia 24/7 -->
+      <article class="status-card" aria-labelledby="titulo-escalamiento">
+        <header class="status-card-header">
+          <h3 id="titulo-escalamiento">Líneas Rojas Hospitalarias</h3>
+        </header>
+        <ul class="contact-list">
+          <li>
+            <strong>Director Médico de Guardia:</strong>
+            <a href="tel:+59322220101" class="soc-contact-link font-mono">+593 (2) 222-0101</a>
+          </li>
+          <li>
+            <strong>Jefe de Ingeniería Biomédica:</strong>
+            <span class="font-mono">EXT-4422 (Biomédica)</span>
+          </li>
+          <li>
+            <strong>CERT Sanitario Nacional:</strong>
+            <span class="font-mono">incidencias@salud-cert.gob</span>
+          </li>
+          <li>
+            <strong>Alerta Máxima SOC Salud:</strong>
+            <span class="font-mono text-danger">EXT-911-HOSP</span>
+          </li>
+        </ul>
+      </article>
+
+    </aside>
+
+  </main>
+
+  <!-- =========================================================================
+       5. PIE DE PÁGINA INSTITUCIONAL (FOOTER SEMÁNTICO - CERO DIVITIS)
+       Estilos aplicados directamente al contenedor footer sin div intermedio.
+       ========================================================================= -->
+  <footer class="site-footer" role="contentinfo">
+    <p>
+      <strong>Hospital Clínico San Rafael &mdash; Centro de Operaciones de Seguridad (SOC)</strong> &bull; Tarea 1
+    </p>
+    <p>
+      Plataforma Front-End nativa diseñada para la protección de infraestructuras críticas sanitarias, apego a estándares <strong>W3C / HTML5 Semántico</strong> y cumplimiento de <strong>Accesibilidad Web WCAG 2.2 AA</strong>.
+    </p>
+    <p class="footer-meta">
+      Protección de Datos de Pacientes &bull; Arquitectura Defensiva en Capa de Presentación &bull; 2026
+    </p>
+  </footer>
+
+</body>
+</html>
