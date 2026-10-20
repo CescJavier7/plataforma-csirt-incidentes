@@ -1,0 +1,34 @@
+[
+  {
+    "codigo": "INC-2041",
+    "fecha": "2026-09-11T11:20:00",
+    "amenaza": "Intento de Ransomware en Servidor HIS (Historias Clínicas)",
+    "servicio": "Servidor Central EHR / Archivo",
+    "severidad": "critica",
+    "estado": "Aislamiento VLAN"
+  },
+  {
+    "codigo": "INC-2040",
+    "fecha": "2026-09-11T10:35:00",
+    "amenaza": "Anomalía de Tráfico en Pasarela IoMT (Bombas de Infusión)",
+    "servicio": "Pabellón UCI — Cama 04 a 12",
+    "severidad": "alta",
+    "estado": "Inspección Biomédica"
+  },
+  {
+    "codigo": "INC-2039",
+    "fecha": "2026-09-11T09:12:00",
+    "amenaza": "Fuga Potencial en Servidor PACS (Imágenes Radiológicas/DICOM)",
+    "servicio": "Imagenología / Tomografía TAC",
+    "severidad": "media",
+    "estado": "Bloqueo IP Externa"
+  },
+  {
+    "codigo": "INC-2038",
+    "fecha": "2026-09-11T07:45:00",
+    "amenaza": "Campaña de Spear Phishing a Personal de Farmacia y Urgencias",
+    "servicio": "Estaciones Dispensación Farmacia",
+    "severidad": "baja",
+    "estado": "Mitigado / Credenciales Revocadas"
+  }
+]
