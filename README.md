@@ -10,14 +10,14 @@ Cada carpeta en la raíz representa un hito arquitectónico en el desarrollo de 
 
 | Módulo / Carpeta | Enfoque Pedagógico | Componentes y Tecnologías | Estado |
 | :--- | :--- | :--- | :---: |
-| **`Tarea 1`** | Maquetación y Prototipado UI | HTML5 Semántico, CSS3 Vanilla, Diseño Responsivo, Formulario de Incidentes. | ✅ Completo |
-| **`Tarea 2`** | Interactividad y Manipulación DOM | JavaScript ES6 Vanilla, Consumo de Datos Mock, Event Listeners, Filtrado Dinámico. | ✅ Completo |
-| **`Tarea 3`** | Servidor HTTP y API Básica | Node.js Vanilla HTTP, Express.js, Pruebas Unitarias de Endpoints (`node --test`). | ✅ Completo |
-| **`Tarea 4`** | Arquitectura en Capas (MVC) | Controladores, Servicios, Modelos en Memoria, Pruebas Automatizadas de Aislamiento. | ✅ Completo |
-| **`Tarea 5`** | Persistencia Relacional con ORM | MySQL 8.4 LTS, Prisma ORM, Migraciones SQL, Siembra de Datos (`seed.js`), Pruebas con TCP Probe. | ✅ Completo |
-| **`Tarea 6`** | Fortalecimiento y Ciberseguridad | JWT Bearer, RBAC (ADMIN, SUPERVISOR, ANALISTA), Bcrypt, Helmet, CORS, Rate Limit, Zod, Sanitize-HTML. | ✅ Completo |
-| **`Tarea 7.1 corregido`** | QA, Rendimiento y Refactorización | DevTools Profiling, Pruebas Jest + Supertest, Linter ESLint Flat Config, Optimización WebP, Cache-Control, APA 7ma Report. | ✅ Completo |
-| **`PROYECTO_FINAL_PRODUCCION`** | **Despliegue y Orquestación Final** | **Consolidación de todo el stack: Multi-stage Dockerfile, Docker Compose (MySQL + Node + Nginx), Reverse Proxy TLS, Jest/Node Tests, SPA.** | 🚀 **Listo para Despliegue** |
+| **`Tarea 1`** | Maquetación y Prototipado UI | HTML5 Semántico, CSS3 Vanilla, Diseño Responsivo, Formulario de Incidentes. |  Completo |
+| **`Tarea 2`** | Interactividad y Manipulación DOM | JavaScript ES6 Vanilla, Consumo de Datos Mock, Event Listeners, Filtrado Dinámico. |  Completo |
+| **`Tarea 3`** | Servidor HTTP y API Básica | Node.js Vanilla HTTP, Express.js, Pruebas Unitarias de Endpoints (`node --test`). | Completo |
+| **`Tarea 4`** | Arquitectura en Capas (MVC) | Controladores, Servicios, Modelos en Memoria, Pruebas Automatizadas de Aislamiento. |  Completo |
+| **`Tarea 5`** | Persistencia Relacional con ORM | MySQL 8.4 LTS, Prisma ORM, Migraciones SQL, Siembra de Datos (`seed.js`), Pruebas con TCP Probe. |  Completo |
+| **`Tarea 6`** | Fortalecimiento y Ciberseguridad | JWT Bearer, RBAC (ADMIN, SUPERVISOR, ANALISTA), Bcrypt, Helmet, CORS, Rate Limit, Zod, Sanitize-HTML. |  Completo |
+| **`Tarea 7.1 corregido`** | QA, Rendimiento y Refactorización | DevTools Profiling, Pruebas Jest + Supertest, Linter ESLint Flat Config, Optimización WebP, Cache-Control, APA 7ma Report. |  Completo |
+| **`PROYECTO_FINAL_PRODUCCION`** | **Despliegue y Orquestación Final** | **Consolidación de todo el stack: Multi-stage Dockerfile, Docker Compose (MySQL + Node + Nginx), Reverse Proxy TLS, Jest/Node Tests, SPA.** | **Listo para Despliegue** |
 
 ---
 
