@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const env = require('./config/env');
+const { auditMiddleware } = require('./middlewares/audit.middleware');
 const errorHandler = require('./middlewares/error.middleware');
 
 const app = express();
@@ -11,11 +12,18 @@ const app = express();
 // No revelar la tecnología del backend
 app.disable('x-powered-by');
 
+// En producción detrás de proxy inverso: confianza en cabeceras y redirección obligatoria a HTTPS (Recomendación 6)
 if (env.nodeEnv === 'production') {
   app.set('trust proxy', 1);
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
+    next();
+  });
 }
 
-// 1. Cabeceras HTTP seguras
+// 1. Cabeceras HTTP seguras mediante Helmet (HSTS, CSP, X-Frame-Options, X-Content-Type)
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -31,6 +39,11 @@ app.use(
         formAction: ["'self'"],
         frameAncestors: ["'none'"],
       },
+    },
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
     },
     crossOriginEmbedderPolicy: false,
   })
@@ -79,7 +92,10 @@ const limitadorAutenticacion = rateLimit({
   },
 });
 
-// 6. Servir estáticos del cliente (SPA) con cabeceras de caché optimizadas
+// 6. Auditoría y Trazabilidad de Seguridad (Recomendación 7: IP, acción, usuario, timestamp)
+app.use(auditMiddleware);
+
+// 7. Servir estáticos del cliente (SPA) con cabeceras de caché optimizadas
 app.use(
   express.static(path.join(__dirname, '../public'), {
     maxAge: '1d',
@@ -93,7 +109,7 @@ app.use(
   })
 );
 
-// 7. Endpoint de verificación de estado (Health Check) según sección 3.6
+// 8. Endpoint de verificación de estado (Health Check)
 const healthHandler = (req, res) => {
   res.status(200).json({
     estado: 'ok',
@@ -104,14 +120,14 @@ const healthHandler = (req, res) => {
 app.get('/health', healthHandler);
 app.get('/api/health', healthHandler);
 
-// 8. Rutas del sistema
+// 9. Rutas del sistema
 app.use('/api/auth', limitadorAutenticacion, require('./routes/auth.routes'));
 app.use('/api/incidentes', require('./routes/incidente.routes'));
 
-// 9. Manejo de endpoints de API inexistentes (404)
+// 10. Manejo de endpoints de API inexistentes (404)
 app.use('/api/*', (req, res) => res.status(404).json({ error: 'Recurso no encontrado' }));
 
-// 10. Fallback para enrutamiento SPA
+// 11. Fallback para enrutamiento SPA
 app.get('*', (req, res, next) => {
   if (req.accepts('html')) {
     return res.sendFile(path.join(__dirname, '../public/index.html'));
@@ -119,7 +135,7 @@ app.get('*', (req, res, next) => {
   next();
 });
 
-// 11. Manejo de rutas inexistentes (404) y excepciones globales (500)
+// 12. Manejo de rutas inexistentes (404) y excepciones globales (500)
 app.use((req, res) => res.status(404).json({ error: 'Recurso no encontrado' }));
 app.use(errorHandler);
 

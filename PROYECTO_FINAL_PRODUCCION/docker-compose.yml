@@ -19,8 +19,8 @@ services:
       --max_connections=200
     volumes:
       - mysql_data:/var/lib/mysql
-    ports:
-      - "127.0.0.1:3306:3306"
+    # En producción la base de datos NO se expone al host (Regla 5 de Seguridad)
+    # La comunicación se realiza exclusivamente a través de la red interna csirt_network
     networks:
       - csirt_network
     healthcheck:
