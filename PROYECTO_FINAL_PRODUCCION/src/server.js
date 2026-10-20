@@ -3,11 +3,12 @@ const app = require('./app');
 
 const PORT = env.PORT;
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, env.HOST, () => {
   console.log('================================================================');
   console.log('  PLATAFORMA CSIRT/SOC - CENTRO DE RESPUESTA A INCIDENTES');
   console.log('================================================================');
   console.log(` Servidor HTTP activo en puerto:   ${PORT}`);
+  console.log(` Interfaz de escucha:              ${env.HOST}`);
   console.log(` Modo de ejecución:                ${env.NODE_ENV}`);
   console.log(` Motor de persistencia:            ${env.PERSISTENCE === 'prisma' ? 'MySQL 8.4 (Prisma ORM)' : 'En Memoria (Mock Staging)'}`);
   console.log(` Orígenes CORS autorizados:        ${env.CLIENT_ORIGINS.join(', ')}`);
@@ -40,4 +41,3 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
 module.exports = server;
-

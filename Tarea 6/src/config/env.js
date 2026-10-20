@@ -8,6 +8,7 @@ const { z } = require('zod');
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(3000),
+  HOST: z.string().default('127.0.0.1'),
   JWT_SECRET: z
     .string({ required_error: 'JWT_SECRET es obligatorio' })
     .min(32, 'JWT_SECRET debe tener al menos 32 caracteres'),
@@ -15,10 +16,9 @@ const envSchema = z.object({
   CLIENT_ORIGIN: z.string().default('http://localhost:5500'),
   // 'prisma' (MySQL) o 'memory' (demo/pruebas sin base de datos)
   PERSISTENCE: z.enum(['prisma', 'memory']).default('prisma'),
-  // Credenciales de prueba inyectadas por variables de entorno
-  ADMIN_PASSWORD: z.string().default('Admin123!'),
-  SUPERVISOR_PASSWORD: z.string().default('Supervisor123!'),
-  ANALISTA_PASSWORD: z.string().default('Analista123!'),
+  ADMIN_PASSWORD: z.string().min(12, 'ADMIN_PASSWORD debe tener al menos 12 caracteres'),
+  SUPERVISOR_PASSWORD: z.string().min(12, 'SUPERVISOR_PASSWORD debe tener al menos 12 caracteres'),
+  ANALISTA_PASSWORD: z.string().min(12, 'ANALISTA_PASSWORD debe tener al menos 12 caracteres'),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -37,4 +37,3 @@ const env = {
 };
 
 module.exports = env;
-

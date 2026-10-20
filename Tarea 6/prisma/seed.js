@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const prisma = require('./src/config/prisma');
 const env = require('./src/config/env');
 
-const SALT_ROUNDS = 10;
+const SALT_ROUNDS = 12;
 
 const usuariosSeed = [
   {
@@ -64,4 +64,3 @@ if (require.main === module) {
 }
 
 module.exports = { seed, usuariosSeed };
-

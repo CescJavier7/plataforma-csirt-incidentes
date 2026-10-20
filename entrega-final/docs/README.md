@@ -20,14 +20,15 @@ En `codigo/server/.env` configure:
 ```env
 NODE_ENV=production
 PORT=3000
-DATABASE_URL="mysql://csirt_user:csirt_secure_pass_2026@localhost:3306/csirt_incidentes"
-JWT_SECRET="clave_criptograficamente_robusta_para_produccion_2026"
+DATABASE_URL="<URL_MYSQL_CON_CREDENCIALES_PROPIAS>"
+JWT_SECRET="<SECRETO_ALEATORIO_DE_AL_MENOS_32_BYTES>"
 JWT_EXPIRES_IN="30m"
-CLIENT_ORIGIN="http://localhost:3000,http://localhost:5500"
-ADMIN_PASSWORD="Admin123!"
-SUPERVISOR_PASSWORD="Supervisor123!"
-ANALISTA_PASSWORD="Analista123!"
+CLIENT_ORIGIN="https://incidentes.suempresa.com"
+ADMIN_PASSWORD="<CONTRASENA_UNICA>"
+SUPERVISOR_PASSWORD="<CONTRASENA_UNICA>"
+ANALISTA_PASSWORD="<CONTRASENA_UNICA>"
 ```
+Genere secretos aleatorios y no use los marcadores literalmente. La aplicación falla al arrancar si faltan variables obligatorias o si `JWT_SECRET` tiene menos de 32 bytes. Rote las credenciales si se desplegaron valores antiguos.
 
 ### 2.3 Instrucciones de Arranque
 ```bash
@@ -45,7 +46,7 @@ node prisma/seed.js
 # 4. Iniciar servicio
 npm start
 ```
-El servidor quedará operativo en `http://localhost:3000`.
+El servidor quedará operativo en `http://localhost:3000`; limite su exposición a loopback o colóquelo detrás de un terminador TLS antes de permitir acceso remoto.
 
 ---
 
@@ -53,7 +54,6 @@ El servidor quedará operativo en `http://localhost:3000`.
 
 | Rol | Correo Electrónico | Contraseña | Permisos Operativos |
 | :--- | :--- | :--- | :--- |
-| **ANALISTA** | `analista@incidentes.com` | `Analista123!` | Consultar catálogo (`GET`) y reportar incidentes (`POST`). |
-| **SUPERVISOR** | `supervisor@incidentes.com` | `Supervisor123!` | Consultar (`GET`), registrar (`POST`), actualizar estado y resolución técnica (`PUT/PATCH`). |
-| **ADMINISTRADOR** | `admin@incidentes.com` | `Admin123!` | Control Total del sistema (`GET`, `POST`, `PUT/PATCH`, `DELETE`). |
-
+| **ANALISTA** | `analista@incidentes.com` | `ANALISTA_PASSWORD` en el entorno | Consultar catálogo (`GET`) y reportar incidentes (`POST`). |
+| **SUPERVISOR** | `supervisor@incidentes.com` | `SUPERVISOR_PASSWORD` en el entorno | Consultar (`GET`), registrar (`POST`), actualizar estado y resolución técnica (`PUT/PATCH`). |
+| **ADMINISTRADOR** | `admin@incidentes.com` | `ADMIN_PASSWORD` en el entorno | Control Total del sistema (`GET`, `POST`, `PUT/PATCH`, `DELETE`). |

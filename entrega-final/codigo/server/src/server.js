@@ -3,7 +3,7 @@ const app = require('./app');
 
 const PORT = env.PORT;
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, env.HOST, () => {
   console.log('================================================================');
   console.log('  PLATAFORMA CSIRT/SOC - CENTRO DE RESPUESTA A INCIDENTES');
   console.log('================================================================');
@@ -40,4 +40,3 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
 module.exports = server;
-

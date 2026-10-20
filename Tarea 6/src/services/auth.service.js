@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const env = require('../config/env');
 
-const SALT_ROUNDS = 10;
+const SALT_ROUNDS = 12;
 
 /**
  * Servicio de Autenticación y Usuarios.
@@ -56,4 +56,3 @@ class AuthService {
 }
 
 module.exports = new AuthService();
-

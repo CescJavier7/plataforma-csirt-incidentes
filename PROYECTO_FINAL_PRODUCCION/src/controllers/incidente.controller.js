@@ -16,9 +16,6 @@ class IncidenteController {
 
   async listar(req, res, next) {
     try {
-      // Optimización de rendimiento (Unidad 7): Caché controlada de 60s
-      res.set('Cache-Control', 'public, max-age=60');
-
       const filtros = req.validatedQuery || {};
       const incidentes = await incidenteService.listarIncidentes(filtros);
 
@@ -75,4 +72,3 @@ class IncidenteController {
 }
 
 module.exports = new IncidenteController();
-

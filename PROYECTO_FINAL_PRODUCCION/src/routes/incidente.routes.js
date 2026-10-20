@@ -11,6 +11,11 @@ const {
 
 const router = Router();
 
+router.use((req, res, next) => {
+  res.set('Cache-Control', 'private, no-store');
+  next();
+});
+
 // 1. Cero Confianza: Toda ruta de incidentes requiere autenticación previa mediante JWT
 router.use(autenticar);
 

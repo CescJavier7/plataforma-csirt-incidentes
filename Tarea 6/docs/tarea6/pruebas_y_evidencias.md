@@ -13,9 +13,9 @@
 
 | Rol | Correo | Contraseña | Permisos sobre `/api/incidentes` |
 |---|---|---|---|
-| ADMIN | admin@incidentes.com | Admin123! | GET, POST, PUT, DELETE |
-| SUPERVISOR | supervisor@incidentes.com | Supervisor123! | GET, PUT |
-| ANALISTA | analista@incidentes.com | Analista123! | GET, POST |
+| ADMIN | admin@incidentes.com | `ADMIN_PASSWORD` (entorno) | GET, POST, PUT, DELETE |
+| SUPERVISOR | supervisor@incidentes.com | `SUPERVISOR_PASSWORD` (entorno) | GET, PUT |
+| ANALISTA | analista@incidentes.com | `ANALISTA_PASSWORD` (entorno) | GET, POST |
 
 ## 2. Resumen de casos
 
@@ -113,7 +113,7 @@ HTTP 201
 - **Verificación:** `GET /api/incidentes/2` devuelve los mismos valores limpios; no contienen `<` ni `>`.
 
 ### Caso 6 – Login exitoso
-- **Entrada:** `POST /api/auth/login` con `{ "email": "analista@incidentes.com", "password": "Analista123!" }`.
+- **Entrada:** `POST /api/auth/login` con `{ "email": "analista@incidentes.com", "password": "$ANALISTA_PASSWORD" }`.
 - **Resultado esperado:** `200 OK` con JWT y datos del usuario sin contraseña.
 - **Resultado obtenido:**
 ```json
@@ -161,4 +161,3 @@ npm run client     # Web  -> http://localhost:5500
 5. Cerrar sesión, entrar como **supervisor**, cambiar estado a EN_PROCESO y pulsar "Guardar estado" → mensaje verde (Caso 8).
 6. En DevTools → Network, revisar la cabecera `Authorization: Bearer …` y la respuesta del preflight `OPTIONS` con `Access-Control-Allow-Origin: http://localhost:5500`.
 7. En DevTools → Application → Session Storage, borrar `incidentes.token` y pulsar "Refrescar" → la app regresa al login por el 401 (Caso 1).
-

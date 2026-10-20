@@ -16,6 +16,15 @@
       <h2>Cerrar o Gestionar Incidente</h2>
       <form id="form-estado">
         <div>
+          <label for="editor-usuario">Usuario editor:</label>
+          <input type="text" id="editor-usuario" autocomplete="username" required>
+        </div>
+        <div>
+          <label for="editor-password">Contraseña del editor:</label>
+          <input type="password" id="editor-password" autocomplete="current-password" required>
+        </div>
+        <button type="button" id="btn-consultar">Consultar incidentes</button>
+        <div>
           <label for="incidente-id">ID del Incidente:</label>
           <input type="number" id="incidente-id" value="1" required>
         </div>

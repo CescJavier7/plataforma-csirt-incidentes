@@ -230,7 +230,7 @@
       Se creó el endpoint <code>POST /api/auth/login</code>. Un esquema Zod estricto exige un correo válido y una contraseña de 8 a 72 caracteres (72 es el máximo que procesa bcrypt) y rechaza campos inesperados, como un <code>rol</code> enviado desde el cliente.
     </p>
     <p>
-      Los usuarios están desacoplados del código: las contraseñas se leen de variables de entorno y se persisten mediante siembra (<code>prisma/seed.js</code>) con hashes <strong>bcrypt (costo 10)</strong>, sin credenciales en texto plano. Si un correo no existe, se compara contra un hash señuelo para evitar ataques de tiempo (timing attacks), respondiendo siempre "Credenciales inválidas".
+      Los usuarios están desacoplados del código: las contraseñas se leen de variables de entorno y se persisten mediante siembra (<code>prisma/seed.js</code>) con hashes <strong>bcrypt (costo 12)</strong>, sin credenciales en texto plano. Si un correo no existe, se compara contra un hash señuelo para evitar ataques de tiempo (timing attacks), respondiendo siempre "Credenciales inválidas".
     </p>
     <p>
       Con credenciales correctas se firma un JWT con algoritmo <strong>HS256 fijado explícitamente</strong>, emisor definido, expiración de una hora y solo identificador, correo y rol. El secreto <code>JWT_SECRET</code> se valida al arrancar: si falta o tiene menos de 32 caracteres, la aplicación no inicia.
@@ -289,19 +289,19 @@
         <tr>
           <td><strong>ADMIN</strong></td>
           <td><code>admin@incidentes.com</code></td>
-          <td><code>Admin123!</code></td>
+          <td><code>ADMIN_PASSWORD</code> (entorno)</td>
           <td>GET, POST, PUT, DELETE</td>
         </tr>
         <tr>
           <td><strong>SUPERVISOR</strong></td>
           <td><code>supervisor@incidentes.com</code></td>
-          <td><code>Supervisor123!</code></td>
+          <td><code>SUPERVISOR_PASSWORD</code> (entorno)</td>
           <td>GET, PUT</td>
         </tr>
         <tr>
           <td><strong>ANALISTA</strong></td>
           <td><code>analista@incidentes.com</code></td>
-          <td><code>Analista123!</code></td>
+          <td><code>ANALISTA_PASSWORD</code> (entorno)</td>
           <td>GET, POST</td>
         </tr>
       </tbody>

@@ -7,8 +7,11 @@
  */
 process.env.NODE_ENV = 'test';
 process.env.PERSISTENCE = 'memory';
-process.env.JWT_SECRET = process.env.JWT_SECRET || 'secreto-de-pruebas-con-mas-de-32-caracteres-123';
+process.env.JWT_SECRET = 'secreto-de-pruebas-con-mas-de-32-caracteres-123';
 process.env.CLIENT_ORIGIN = 'http://localhost:5500';
+process.env.ADMIN_PASSWORD = 'test-admin-password-not-production';
+process.env.SUPERVISOR_PASSWORD = 'test-supervisor-password-not-production';
+process.env.ANALISTA_PASSWORD = 'test-analista-password-not-production';
 
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');
@@ -22,9 +25,9 @@ const tokens = {};
 const evidencias = [];
 
 const CRED = {
-  ADMIN: { email: 'admin@incidentes.com', password: 'Admin123!' },
-  SUPERVISOR: { email: 'supervisor@incidentes.com', password: 'Supervisor123!' },
-  ANALISTA: { email: 'analista@incidentes.com', password: 'Analista123!' },
+  ADMIN: { email: 'admin@incidentes.com', password: process.env.ADMIN_PASSWORD },
+  SUPERVISOR: { email: 'supervisor@incidentes.com', password: process.env.SUPERVISOR_PASSWORD },
+  ANALISTA: { email: 'analista@incidentes.com', password: process.env.ANALISTA_PASSWORD },
 };
 
 const acortar = (t) => (typeof t === 'string' && t.length > 40 ? `${t.slice(0, 20)}…${t.slice(-10)}` : t);
@@ -49,8 +52,12 @@ async function pedir(method, ruta, { body, token, headers = {} } = {}) {
 function registrar({ n, titulo, method, ruta, req, esperado, res, extra }) {
   const cabeceras = { ...req.reqHeaders };
   if (cabeceras.Authorization) cabeceras.Authorization = `Bearer ${acortar(cabeceras.Authorization.slice(7))}`;
+  const cuerpoPeticion = JSON.parse(JSON.stringify(req.body || {}));
+  if (Object.prototype.hasOwnProperty.call(cuerpoPeticion, 'password')) {
+    cuerpoPeticion.password = '[REDACTED]';
+  }
   const cuerpo = JSON.parse(JSON.stringify(res.body, (k, v) => (k === 'token' ? acortar(v) : v)));
-  evidencias.push({ n, titulo, method, ruta, cabeceras, body: req.body, esperado, status: res.status, cuerpo, extra });
+  evidencias.push({ n, titulo, method, ruta, cabeceras, body: cuerpoPeticion, esperado, status: res.status, cuerpo, extra });
 }
 
 async function caso(n, titulo, method, ruta, opciones, esperado, extra) {
@@ -266,4 +273,3 @@ function escribirEvidencias() {
   fs.mkdirSync(path.dirname(destino), { recursive: true });
   fs.writeFileSync(destino, contenido, 'utf8');
 }
-

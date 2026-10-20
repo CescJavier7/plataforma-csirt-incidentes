@@ -4,7 +4,6 @@ const { puedeCambiarEstado } = require("../utils/estado");
 const IncidenteController = {
   listar: (req, res) => {
     const lista = IncidenteModel.obtenerResumen();
-    res.set("Cache-Control", "public, max-age=60");
     return res.status(200).json(lista);
   },
 

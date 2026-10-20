@@ -7,6 +7,9 @@ process.env.PERSISTENCE = 'memory';
 process.env.DATABASE_URL = 'mysql://dummy:dummy@localhost:3306/dummy';
 process.env.JWT_SECRET = 'plataforma-csirt-clave-super-secreta-2026-test-key';
 process.env.CLIENT_ORIGIN = 'http://localhost:3000,http://127.0.0.1:3000';
+process.env.ADMIN_PASSWORD = 'test-admin-password-not-for-production';
+process.env.SUPERVISOR_PASSWORD = 'test-supervisor-password-not-for-production';
+process.env.ANALISTA_PASSWORD = 'test-analista-password-not-for-production';
 
 const app = require('../src/app');
 
@@ -44,6 +47,7 @@ describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad
   test('2. Acceso sin token responde 401 "Token de acceso requerido" (Sección 3.2)', async () => {
     const res = await fetch(`${baseUrl}/api/incidentes`);
     assert.equal(res.status, 401);
+    assert.equal(res.headers.get('cache-control'), 'private, no-store');
     const data = await res.json();
     assert.equal(data.error, 'Token de acceso requerido');
   });
@@ -64,7 +68,7 @@ describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad
     const rAdmin = await fetch(`${baseUrl}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@incidentes.com', password: 'Admin123!' }),
+      body: JSON.stringify({ email: 'admin@incidentes.com', password: process.env.ADMIN_PASSWORD }),
     });
     assert.equal(rAdmin.status, 200);
     const dAdmin = await rAdmin.json();
@@ -75,7 +79,7 @@ describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad
     const rSup = await fetch(`${baseUrl}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'supervisor@incidentes.com', password: 'Supervisor123!' }),
+      body: JSON.stringify({ email: 'supervisor@incidentes.com', password: process.env.SUPERVISOR_PASSWORD }),
     });
     assert.equal(rSup.status, 200);
     const dSup = await rSup.json();
@@ -86,7 +90,7 @@ describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad
     const rAna = await fetch(`${baseUrl}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'analista@incidentes.com', password: 'Analista123!' }),
+      body: JSON.stringify({ email: 'analista@incidentes.com', password: process.env.ANALISTA_PASSWORD }),
     });
     assert.equal(rAna.status, 200);
     const dAna = await rAna.json();
@@ -122,7 +126,7 @@ describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad
       headers: { Authorization: `Bearer ${tokenAnalista}` },
     });
     assert.equal(res.status, 200);
-    assert.equal(res.headers.get('cache-control'), 'public, max-age=60');
+    assert.equal(res.headers.get('cache-control'), 'private, no-store');
     const data = await res.json();
     assert.ok(Array.isArray(data.data));
     assert.ok(data.data.length >= 1);

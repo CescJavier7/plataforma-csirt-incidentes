@@ -78,3 +78,4 @@ module.exports = {
   registrarLogSeguridad,
   obtenerIpCliente,
 };
+

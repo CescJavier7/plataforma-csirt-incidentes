@@ -65,6 +65,8 @@ Para ejecutar la plataforma de forma inmediata sin necesidad de levantar bases d
 
 ```bash
 cd PROYECTO_FINAL_PRODUCCION
+cp .env.example .env
+# Configure todas las variables obligatorias con secretos únicos (JWT_SECRET de al menos 32 bytes).
 npm install
 npm test       # Ejecuta la suite de 17 pruebas unitarias y de integración (100% pass)
 npm start      # Inicia el servidor en http://localhost:3000 con persistencia en memoria
@@ -75,15 +77,18 @@ Para desplegar la arquitectura completa con **MySQL 8.4 LTS**, **Node.js 22** y 
 
 ```bash
 cd PROYECTO_FINAL_PRODUCCION
+cp .env.example .env
+# Rellene .env con secretos únicos; JWT_SECRET debe tener al menos 32 bytes.
+# Ejemplo para generar un secreto: openssl rand -base64 48
 docker compose up --build -d
 ```
 
-- **Panel de Control Web:** `http://localhost` (a través de Nginx) o `http://localhost:3000`
+- El proxy publica HTTP únicamente en `127.0.0.1:80`; para acceso remoto debe configurarse un terminador TLS delante del proxy.
+- **Panel de Control Web local:** `http://localhost` (a través de Nginx; el puerto 3000 no se publica al host).
+- El servidor Node escucha en loopback por defecto; Compose lo enlaza a la red interna del proxy. En proveedores PaaS configure `HOST=0.0.0.0` únicamente cuando su ingress termine TLS.
 - **Healthcheck:** `http://localhost/api/health`
-- **Credenciales por Defecto:**
-  - `admin@incidentes.com` / `Admin123!` (Rol: **ADMIN**)
-  - `supervisor@incidentes.com` / `Supervisor123!` (Rol: **SUPERVISOR**)
-  - `analista@incidentes.com` / `Analista123!` (Rol: **ANALISTA**)
+- Las contraseñas de las cuentas iniciales se establecen mediante `ADMIN_PASSWORD`, `SUPERVISOR_PASSWORD` y `ANALISTA_PASSWORD` en `.env`. No hay credenciales por defecto.
+- Rote cualquier secreto que se haya usado en una instalación anterior.
 
 ---
 
@@ -92,7 +97,7 @@ docker compose up --build -d
 | Operación | Método HTTP | Ruta | ANALISTA | SUPERVISOR | ADMIN | Regla de Negocio Adicional |
 | :--- | :---: | :--- | :---: | :---: | :---: | :--- |
 | **Login** | `POST` | `/api/auth/login` | ✅ | ✅ | ✅ | Rate limit: 15 req/15 min. |
-| **Listar Incidentes** | `GET` | `/api/incidentes` | ✅ | ✅ | ✅ | Cabecera `Cache-Control: public, max-age=60`. |
+| **Listar Incidentes** | `GET` | `/api/incidentes` | ✅ | ✅ | ✅ | Cabecera `Cache-Control: private, no-store`. |
 | **Consultar por ID** | `GET` | `/api/incidentes/:id` | ✅ | ✅ | ✅ | Validación defensiva: ID entero > 0. |
 | **Crear Incidente** | `POST` | `/api/incidentes` | ✅ | ❌ | ✅ | Sanitización anti-XSS y validación Zod. |
 | **Actualizar Estado** | `PUT` | `/api/incidentes/:id` | ❌ | ✅ | ✅ | Obligatorio ingresar resolución técnica (mín. 5 chars) para cerrar. |
@@ -103,4 +108,3 @@ docker compose up --build -d
 ## 📖 Documentación Detallada de Despliegue
 Para instrucciones exhaustivas de despliegue en servidores VPS (Ubuntu, Systemd, PM2, Certbot SSL) y proveedores Cloud (Railway, Render, AWS), consulte el archivo:
 👉 [**GUIA_DESPLIEGUE.md**](file:///c:/Desarrollo%20de%20Plataformas/UNIFICADO/GUIA_DESPLIEGUE.md)
-

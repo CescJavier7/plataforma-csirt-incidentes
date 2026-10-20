@@ -12,7 +12,7 @@ Plataforma integral de gestión y triaje de incidentes con arquitectura cliente-
   * `ADMIN`: Acceso total (GET, POST, PUT, DELETE).
   * `SUPERVISOR`: Consulta y actualización de estado (GET, PUT).
   * `ANALISTA`: Consulta y creación de incidentes (GET, POST).
-* **Hashing de Contraseñas:** Encriptación con `bcryptjs` (salt rounds = 10) y mitigación de ataques de tiempo (*timing attacks*).
+* **Hashing de Contraseñas:** Encriptación con `bcryptjs` (salt rounds = 12) y mitigación de ataques de tiempo (*timing attacks*).
 * **Seguridad Perimetral:**
   * Cabeceras HTTP blindadas con `helmet` (CSP, HSTS, X-Content-Type-Options, X-Frame-Options; supresión de `X-Powered-By`).
   * CORS estricto limitado a orígenes autorizados (`CLIENT_ORIGIN`).
@@ -27,13 +27,15 @@ Plataforma integral de gestión y triaje de incidentes con arquitectura cliente-
 
 ---
 
-## 2. Usuarios de Demostración
+## 2. Credenciales
+
+Configure `ADMIN_PASSWORD`, `SUPERVISOR_PASSWORD` y `ANALISTA_PASSWORD` en el entorno antes de iniciar el backend. No hay credenciales de demostración ni valores por defecto; use contraseñas únicas de al menos 12 caracteres.
 
 | Rol | Correo Electrónico | Contraseña | Permisos sobre `/api/incidentes` |
 |---|---|---|---|
-| **ADMIN** | `admin@incidentes.com` | `Admin123!` | GET, POST, PUT, DELETE |
-| **SUPERVISOR** | `supervisor@incidentes.com` | `Supervisor123!` | GET, PUT |
-| **ANALISTA** | `analista@incidentes.com` | `Analista123!` | GET, POST |
+| **ADMIN** | `admin@incidentes.com` | `ADMIN_PASSWORD` | GET, POST, PUT, DELETE |
+| **SUPERVISOR** | `supervisor@incidentes.com` | `SUPERVISOR_PASSWORD` | GET, PUT |
+| **ANALISTA** | `analista@incidentes.com` | `ANALISTA_PASSWORD` | GET, POST |
 
 ---
 
@@ -44,12 +46,15 @@ Plataforma integral de gestión y triaje de incidentes con arquitectura cliente-
 npm install
 ```
 
+Antes de iniciar, copie `.env.example` a `.env` y defina secretos únicos; `JWT_SECRET` debe tener al menos 32 caracteres.
+
 ### 3.2 Iniciar la API Backend (Puerto 3000)
 ```bash
 npm start
 ```
 * API Endpoint: `http://localhost:3000/api/incidentes`
 * Healthcheck: `http://localhost:3000/api/health`
+* El backend escucha en loopback por defecto; expóngalo remotamente solo detrás de un terminador TLS y ajuste `HOST` únicamente para el enlace interno de ese proxy.
 
 ### 3.3 Iniciar el Cliente Web Frontend (Puerto 5500)
 En una terminal separada:

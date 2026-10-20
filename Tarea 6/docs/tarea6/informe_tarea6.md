@@ -27,7 +27,7 @@ Tomando como referencia el OWASP Top 10, se identificaron estos riesgos:
 
 Se creó el endpoint `POST /api/auth/login`. Un esquema Zod estricto exige un correo válido y una contraseña de 8 a 72 caracteres (72 es el máximo que procesa bcrypt) y rechaza campos inesperados, como un `rol` enviado desde el cliente.
 
-Los usuarios están desacoplados del código: las contraseñas se leen de variables de entorno y se persisten mediante siembra (`prisma/seed.js`) con hashes **bcrypt (costo 10)**, sin credenciales en texto plano. Si un correo no existe, se compara contra un hash señuelo para evitar ataques de tiempo (timing attacks), respondiendo siempre "Credenciales inválidas".
+Los usuarios están desacoplados del código: las contraseñas se leen de variables de entorno y se persisten mediante siembra (`prisma/seed.js`) con hashes **bcrypt (costo 12)**, sin credenciales en texto plano. Si un correo no existe, se compara contra un hash señuelo para evitar ataques de tiempo (timing attacks), respondiendo siempre "Credenciales inválidas".
 
 Con credenciales correctas se firma un JWT con algoritmo **HS256 fijado explícitamente**, emisor definido, expiración de una hora y solo identificador, correo y rol. El secreto `JWT_SECRET` se valida al arrancar: si falta o tiene menos de 32 caracteres, la aplicación no inicia.
 

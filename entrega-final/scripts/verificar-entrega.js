@@ -5,6 +5,11 @@
  */
 
 const BASE_URL = process.argv[2] || process.env.API_URL || 'http://localhost:3000';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+if (!ADMIN_PASSWORD) {
+  throw new Error('Configure ADMIN_PASSWORD para ejecutar la prueba de humo autenticada');
+}
 
 async function ejecutarPruebasDeHumo() {
   console.log('================================================================');
@@ -72,7 +77,7 @@ async function ejecutarPruebasDeHumo() {
     const res = await fetch(`${BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'admin@incidentes.com', password: process.env.ADMIN_PASSWORD || 'Admin123!' }),
+      body: JSON.stringify({ email: 'admin@incidentes.com', password: ADMIN_PASSWORD }),
     });
     const data = await res.json();
     if (res.status === 200 && data.data && data.data.token) {
@@ -118,4 +123,3 @@ async function ejecutarPruebasDeHumo() {
 }
 
 ejecutarPruebasDeHumo();
-

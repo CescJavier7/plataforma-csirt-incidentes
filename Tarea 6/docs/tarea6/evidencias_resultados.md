@@ -1,12 +1,14 @@
 # Evidencias automáticas – Pruebas de seguridad (Tarea 6)
 
-> Generado por `tests/seguridad.test.js` el 19/10/2026, 6:16:23 p. m.. Persistencia: memoria.
+> Generado por `tests/seguridad.test.js` el 19/10/2026, 7:58:56 p. m.. Persistencia: memoria.
 
 ### Caso 1: Acceso sin token
 
 **Entrada**
 ```http
 GET /api/incidentes
+
+{}
 ```
 **Resultado esperado:** 401 Unauthorized – "Token de acceso requerido"
 
@@ -24,7 +26,9 @@ GET /api/incidentes
 **Entrada**
 ```http
 DELETE /api/incidentes/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
+
+{}
 ```
 **Resultado esperado:** 403 Forbidden – solo ADMIN puede eliminar
 
@@ -46,7 +50,7 @@ Content-Type: application/json
 
 {
   "email": "correo-sin-arroba",
-  "password": "123"
+  "password": "[REDACTED]"
 }
 ```
 **Resultado esperado:** 400 Bad Request con errores de Zod por campo
@@ -75,7 +79,7 @@ Content-Type: application/json
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
 
 {
   "titulo": 123,
@@ -112,7 +116,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
 
 {
   "titulo": "<script>alert(\"XSS\")</script>Caída del servidor web",
@@ -134,8 +138,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
     "resolucion": null,
     "prioridad": "ALTA",
     "estado": "ABIERTO",
-    "createdAt": "2026-10-19T23:16:23.318Z",
-    "updatedAt": "2026-10-19T23:16:23.318Z"
+    "createdAt": "2026-10-20T00:58:55.720Z",
+    "updatedAt": "2026-10-20T00:58:55.720Z"
   }
 }
 ```
@@ -154,7 +158,7 @@ Content-Type: application/json
 
 {
   "email": "analista@incidentes.com",
-  "password": "Analista123!"
+  "password": "[REDACTED]"
 }
 ```
 **Resultado esperado:** 200 OK con token JWT, tipo Bearer y datos del usuario (sin contraseña)
@@ -165,7 +169,7 @@ Content-Type: application/json
   "success": true,
   "message": "Inicio de sesión exitoso",
   "data": {
-    "token": "eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs",
+    "token": "eyJhbGciOiJIUzI1NiIs…S4DS9El3fg",
     "tipo": "Bearer",
     "usuario": {
       "id": 3,
@@ -183,7 +187,7 @@ Content-Type: application/json
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
 
 {
   "titulo": "Fallo en VPN corporativa",
@@ -205,8 +209,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
     "resolucion": null,
     "prioridad": "CRITICA",
     "estado": "ABIERTO",
-    "createdAt": "2026-10-19T23:16:23.347Z",
-    "updatedAt": "2026-10-19T23:16:23.347Z"
+    "createdAt": "2026-10-20T00:58:55.750Z",
+    "updatedAt": "2026-10-20T00:58:55.750Z"
   }
 }
 ```
@@ -222,7 +226,7 @@ GET /api/incidentes → 200, total=3; fila encontrada: { id: 3, titulo: "Fallo e
 ```http
 PUT /api/incidentes/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…85Mnwf_TUU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…PqQ0Frfu1M
 
 {
   "estado": "EN_PROCESO"
@@ -242,8 +246,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…85Mnwf_TUU
     "resolucion": null,
     "prioridad": "CRITICA",
     "estado": "EN_PROCESO",
-    "createdAt": "2026-10-19T23:16:23.347Z",
-    "updatedAt": "2026-10-19T23:16:23.379Z"
+    "createdAt": "2026-10-20T00:58:55.750Z",
+    "updatedAt": "2026-10-20T00:58:55.781Z"
   }
 }
 ```
@@ -253,7 +257,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…85Mnwf_TUU
 **Entrada**
 ```http
 DELETE /api/incidentes/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…Eh0Upydgzs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
+
+{}
 ```
 **Resultado esperado:** 401 – la firma ya no coincide, el servidor rechaza el token
 
@@ -275,7 +281,7 @@ Content-Type: application/json
 
 {
   "email": "admin@incidentes.com",
-  "password": "ClaveEquivocada1"
+  "password": "[REDACTED]"
 }
 ```
 **Resultado esperado:** 401 "Credenciales inválidas" (no revela qué campo falló)
@@ -295,7 +301,7 @@ Content-Type: application/json
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…85Mnwf_TUU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…PqQ0Frfu1M
 
 {
   "titulo": "Intento no autorizado",
@@ -319,6 +325,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…85Mnwf_TUU
 ```http
 GET /api/health
 Origin: http://sitio-malicioso.com
+
+{}
 ```
 **Resultado esperado:** 403 y SIN cabecera Access-Control-Allow-Origin
 
@@ -341,6 +349,8 @@ Access-Control-Allow-Origin = (ausente) | Con Origin http://localhost:5500 → 2
 **Entrada**
 ```http
 GET /api/health
+
+{}
 ```
 **Resultado esperado:** Cabeceras CSP, HSTS, X-Content-Type-Options, X-Frame-Options; sin X-Powered-By
 
@@ -348,7 +358,7 @@ GET /api/health
 ```json
 {
   "status": "UP",
-  "timestamp": "2026-10-19T23:16:23.502Z"
+  "timestamp": "2026-10-20T00:58:56.077Z"
 }
 ```
 **Verificación adicional:**
@@ -366,7 +376,9 @@ x-powered-by: (ausente)
 **Entrada**
 ```http
 DELETE /api/incidentes/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…VgkcoD6iQ8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…G7kC0_gZIk
+
+{}
 ```
 **Resultado esperado:** 200 OK y el recurso deja de existir (GET posterior → 404)
 

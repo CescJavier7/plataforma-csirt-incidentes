@@ -3,7 +3,7 @@ const app = require('./app');
 
 const PORT = env.PORT;
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, env.HOST, () => {
   console.log('====================================================');
   console.log(` Servidor de Incidentes ejecutándose en puerto: ${PORT}`);
   console.log(` Entorno: ${env.NODE_ENV}`);

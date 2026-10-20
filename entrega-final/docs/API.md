@@ -28,7 +28,7 @@ Todos los endpoints (salvo `/health` y `/api/auth/login`) requieren la cabecera 
 ```json
 {
   "email": "analista@incidentes.com",
-  "password": "Analista123!"
+  "password": "<ANALISTA_PASSWORD_CONFIGURADA>"
 }
 ```
 * **Respuesta 200 OK:**
@@ -61,7 +61,7 @@ Todos los endpoints (salvo `/health` y `/api/auth/login`) requieren la cabecera 
 ### `GET /api/incidentes`
 * **Roles Autorizados:** `Analista`, `Supervisor`, `Administrador`.
 * **Parámetros Opcionales de Consulta:** `?estado=EN_PROCESO&prioridad=CRITICA`
-* **Cabecera de Respuesta:** `Cache-Control: public, max-age=60`
+* **Cabecera de Respuesta:** `Cache-Control: private, no-store`
 * **Respuesta 200 OK:**
 ```json
 {
@@ -148,4 +148,3 @@ Todos los endpoints (salvo `/health` y `/api/auth/login`) requieren la cabecera 
   "error": "Permiso insuficiente para realizar esta acción"
 }
 ```
-

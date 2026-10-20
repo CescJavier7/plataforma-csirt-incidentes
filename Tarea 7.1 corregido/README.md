@@ -6,6 +6,10 @@
 **Versión:** 1.1.0 (Auditoría Técnica, Corrección y Optimización Integral)  
 **Entorno de Ejecución:** Node.js (v20+ / v22+), Express 5, Jest 30, Supertest 7, ESLint 10 (Flat Config)
 
+## Configuración de acceso
+
+Antes de iniciar el servidor, configure `INCIDENTE_EDITOR_USERNAME` y `INCIDENTE_EDITOR_PASSWORD` en el almacén seguro de variables del entorno; la contraseña debe tener al menos 12 caracteres. No existen credenciales predeterminadas. La API exige estas credenciales para consultar y modificar incidentes, y el navegador no las guarda. El servidor escucha en `127.0.0.1` por defecto; permita acceso remoto solo detrás de un terminador TLS confiable.
+
 ---
 
 ## 1. Descripción del Proyecto
@@ -17,7 +21,7 @@ En el marco de la **Unidad 7**, el proyecto fue sometido a un proceso integral d
 2. **Pruebas unitarias automatizadas con Jest** para validar de forma determinista las reglas de negocio de transición de estados.
 3. **Pruebas de integración HTTP con Supertest** para verificar códigos de estado semánticos (200, 400, 404), cabeceras de red y contratos JSON del controlador.
 4. **Análisis estático y formateo con ESLint** bajo la especificación Flat Config para estandarización de buenas prácticas.
-5. **Auditoría y optimización de rendimiento real** sobre consultas a datos (proyección de payload ligero), directivas de almacenamiento en caché (`Cache-Control: public, max-age=60`) y optimización del recurso multimedia principal (conversión WebP y redimensionado a 21.9 KB con Lazy Loading).
+5. **Auditoría y optimización de rendimiento real** sobre consultas a datos (proyección de payload ligero), renderizado seguro del contenido y optimización del recurso multimedia principal (conversión WebP y redimensionado a 21.9 KB con Lazy Loading).
 6. **Refactorización modular bajo el patrón Modelo-Vista-Controlador (MVC)**, incorporando una capa de middlewares para sanitización y validación defensiva de parámetros.
 
 ---
@@ -62,7 +66,7 @@ Tarea 7/
 ### Responsabilidades por Módulo:
 * **Modelo (`src/models/incidente.model.js`):** Gestiona el almacén de datos en memoria. Expone métodos para consulta global (`obtenerTodos`), búsqueda puntual (`obtenerPorId`), actualización (`actualizar`) y proyección optimizada para el tablero (`obtenerResumen`), la cual preserva el campo `resolucion` requerido por la vista descartando metadatos pesados (`createdAt`).
 * **Middleware (`src/middlewares/validar-id.middleware.js`):** Intercepta peticiones con identificador, verifica que sea un entero estrictamente positivo y responde de inmediato con `400 Bad Request` si la entrada es inválida, inyectando `req.incidenteId`.
-* **Controlador (`src/controllers/incidente.controller.js`):** Orquesta el flujo de negocio, aplica directivas de almacenamiento en caché (`Cache-Control: public, max-age=60`) y responde con códigos semánticos REST (200, 400, 404).
+* **Controlador (`src/controllers/incidente.controller.js`):** Orquesta el flujo de negocio, evita almacenar en caché datos de incidentes (`Cache-Control: private, no-store`) y responde con códigos semánticos REST (200, 400, 404).
 * **Reglas de Negocio (`src/utils/estado.js`):** Función pura `puedeCambiarEstado` totalmente desacoplada de Express y persistencia para su evaluación unitaria determinista.
 * **Vista (`src/public/`):** Interfaz web HTML5 semántica y responsiva que muestra el inventario de incidentes, formulario interactivo de transición y diagrama de red optimizado con `loading="lazy"` y dimensiones explícitas `width="610" height="323"`.
 
@@ -123,7 +127,7 @@ La aplicación cuenta con **13 pruebas automatizadas pasando exitosamente (100%)
 ### 4.2 Suite de Integración (`tests/incidente.controller.test.js`) — Controlador HTTP y API
 | Caso de Prueba | Método / Endpoint | Escenario Evaluado | Código HTTP | Estado |
 |---|---|---|:---:|:---:|
-| **Caso 6** | `GET /api/incidentes` | Verificación de cabecera `Cache-Control: public, max-age=60` | 200 OK | ✅ Aprobado |
+| **Caso 6** | `GET /api/incidentes` | Verificación de cabecera `Cache-Control: private, no-store` | 200 OK | ✅ Aprobado |
 | **Caso 7** | `GET /api/incidentes` | Proyección optimizada (incluye `resolucion`, descarta `createdAt`) | 200 OK | ✅ Aprobado |
 | **Caso 8** | `GET /api/incidentes/abc` | ID no numérico (Defecto 2) con mensaje de error | 400 Bad Request | ✅ Aprobado |
 | **Caso 9** | `GET /api/incidentes/-5` | ID menor o igual a cero | 400 Bad Request | ✅ Aprobado |
@@ -169,7 +173,7 @@ Todas las optimizaciones descritas están **físicamente implementadas y activas
    * *Después:* Proyección con `obtenerResumen()` en `src/models/incidente.model.js` y conectada en `src/controllers/incidente.controller.js`. Transfiere exactamente **381 bytes** (**reducción del 23.5% en la consulta**), manteniendo `resolucion` para la vista y eliminando metadatos pesados (`createdAt`).
 
 3. **Estrategia de Almacenamiento en Caché:**
-   * Cabecera `Cache-Control: public, max-age=60` activa en `src/controllers/incidente.controller.js` (Línea 7), evitando peticiones redundantes al servidor durante 60 segundos por cliente.
+   * Cabecera `Cache-Control: private, no-store` en la API para impedir el almacenamiento compartido de datos de incidentes.
 
 ---
 

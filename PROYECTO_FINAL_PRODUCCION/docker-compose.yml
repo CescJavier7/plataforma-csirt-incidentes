@@ -9,10 +9,10 @@ services:
     container_name: csirt_mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_super_secure_pass_2026}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-csirt_incidentes}
       MYSQL_USER: ${MYSQL_USER:-csirt_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-csirt_secure_pass_2026}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}
     command: >
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
@@ -24,7 +24,7 @@ services:
     networks:
       - csirt_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root_super_secure_pass_2026}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -45,14 +45,15 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+      HOST: 0.0.0.0
       PERSISTENCE: prisma
-      DATABASE_URL: mysql://${MYSQL_USER:-csirt_user}:${MYSQL_PASSWORD:-csirt_secure_pass_2026}@db:3306/${MYSQL_DATABASE:-csirt_incidentes}
-      JWT_SECRET: ${JWT_SECRET:-cambiar_por_clave_criptografica_segura_de_produccion_2026}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
-      CLIENT_ORIGIN: ${CLIENT_ORIGIN:-http://localhost,http://localhost:80,http://localhost:3000}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
-      SUPERVISOR_PASSWORD: ${SUPERVISOR_PASSWORD:-Supervisor123!}
-      ANALISTA_PASSWORD: ${ANALISTA_PASSWORD:-Analista123!}
+      DATABASE_URL: mysql://${MYSQL_USER:-csirt_user}:${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env}@db:3306/${MYSQL_DATABASE:-csirt_incidentes}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-30m}
+      CLIENT_ORIGIN: ${CLIENT_ORIGIN:?Set CLIENT_ORIGIN in .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
+      SUPERVISOR_PASSWORD: ${SUPERVISOR_PASSWORD:?Set SUPERVISOR_PASSWORD in .env}
+      ANALISTA_PASSWORD: ${ANALISTA_PASSWORD:?Set ANALISTA_PASSWORD in .env}
     command: >
       sh -c "npx prisma migrate deploy &&
              node prisma/seed.js &&
@@ -72,7 +73,7 @@ services:
     depends_on:
       - app
     ports:
-      - "80:80"
+      - "127.0.0.1:80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     networks:
@@ -85,4 +86,3 @@ networks:
 volumes:
   mysql_data:
     driver: local
-

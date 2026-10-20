@@ -44,7 +44,7 @@
   - Explicar cómo las 17 pruebas unitarias y de integración validan en menos de un segundo toda la matriz de seguridad y reglas de negocio.
 - **Rendimiento y Optimización Web (Unidad 7):**
   - Mostrar en DevTools la entrega del diagrama de topología de red en formato `.webp` (reducción de más del 90% en bytes frente al PNG original).
-  - Inspeccionar la cabecera `Cache-Control: public, max-age=60` en las respuestas de la API y de 1 día en recursos estáticos.
+  - Inspeccionar la cabecera `Cache-Control: private, no-store` en las respuestas de la API y de 1 día en recursos estáticos.
 
 ### 🚀 Bloque 5: Despliegue en Producción y Script de Humo (Minutos 16:00 - 18:30)
 - **Demostración de Producción:**
@@ -58,4 +58,3 @@
 ### 🏁 Bloque 6: Conclusiones y Retrospectiva (Minutos 18:30 - 20:00)
 - **Lecciones Aprendidas:** Destacar el valor de la defensa en profundidad, el uso de esquemas Zod con sanitización integrada y la arquitectura de migraciones con Prisma.
 - **Cierre formal:** Agradecimiento y fin de la defensa.
-

@@ -76,7 +76,7 @@ Respondiendo a la recomendación de la evaluación técnica, se añadieron 8 pru
   - `GET /api/incidentes/9999` → Valida respuesta `404 Not Found` ante recurso inexistente.
   - `GET /api/incidentes/1` → Valida respuesta `200 OK` con la entidad solicitada.
 * **Validación de Contrato y Rendimiento (Defecto 1 y Optimización):**
-  - `GET /api/incidentes` → Valida código `200 OK`, presencia obligatoria de la cabecera `Cache-Control: public, max-age=60`, inclusión del campo `resolucion` y omisión de metadatos pesados (`createdAt`).
+  - `GET /api/incidentes` → Valida código `200 OK`, presencia obligatoria de la cabecera `Cache-Control: private, no-store`, inclusión del campo `resolucion` y omisión de metadatos pesados (`createdAt`).
   - `PATCH /api/incidentes/1/estado` con resolución vacía → Valida rechazo automático con `400 Bad Request`.
   - `PATCH /api/incidentes/3/estado` con transición válida → Valida actualización exitosa con `200 OK`.
 
@@ -111,7 +111,7 @@ A diferencia de entregas preliminares donde existían discrepancias entre las af
 |---|---|---|---|---|
 | **Recurso Multimedia Principal** | 351,969 bytes (~343.7 KB) | 22,418 bytes (**21.9 KB**) | Conversión a formato moderno WebP y redimensionado de 2536×1344 px a tamaño de presentación (610×323 px). | `src/public/assets/diagrama-red.png.webp` |
 | **Payload de Consulta (`GET /api/incidentes`)** | 498 bytes (todos los campos con `obtenerTodos`) | **381 bytes** (`obtenerResumen` proyectado con `resolucion`) | Proyección modular en el modelo omitiendo campos no requeridos por la vista (`createdAt`). | `src/models/incidente.model.js` y `src/controllers/incidente.controller.js` |
-| **Política de Caché de Red** | Sin cabecera (recarga completa en cada petición) | **`Cache-Control: public, max-age=60`** | Directiva HTTP para almacenamiento local en el cliente y validación de 304 Not Modified. | `src/controllers/incidente.controller.js` (Línea 7) |
+| **Política de Caché de Red** | Sin cabecera (recarga completa en cada petición) | **`Cache-Control: private, no-store`** | Evita almacenar datos de incidentes en cachés compartidas o locales. | `src/controllers/incidente.controller.js` |
 | **Volumen Total Transferido en Carga** | ~352,467 bytes | **~22,799 bytes** | **Reducción neta superior al 93%** en transferencia de red. | Comprobable en DevTools Network |
 
 ### Corrección de la Regresión Latente de la Vista
@@ -158,4 +158,3 @@ En cumplimiento estricto de las observaciones del comité evaluador:
 ## 8. Conclusiones
 
 La intervención integral sobre la Plataforma de Incidentes demuestra que el aseguramiento de calidad de software no reside únicamente en la redacción de informes teóricos, sino en la **consistencia rigurosa y reproducible entre el código fuente, las pruebas automatizadas y las métricas documentadas**. La arquitectura desacoplada en MVC con middlewares, el 100% de cobertura en reglas críticas, y la reducción verificable del 93.4% en volumen transferido dotan a la plataforma de alta confiabilidad y rendimiento.
-

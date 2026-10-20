@@ -44,11 +44,13 @@ Edite el archivo `.env` configurando secretos criptográficos de alta entropía:
 nano .env
 ```
 > [!IMPORTANT]
-> Genere un secreto JWT seguro con:
+> Genere un secreto JWT seguro y contraseñas únicas para las cuentas con:
 > ```bash
 > openssl rand -base64 48
 > ```
-> Asegúrese de cambiar las contraseñas de MySQL y de los usuarios iniciales del sistema.
+> Configure también contraseñas únicas para MySQL y `ADMIN_PASSWORD`, `SUPERVISOR_PASSWORD` y `ANALISTA_PASSWORD`. La aplicación rechaza el arranque si falta una variable crítica o si `JWT_SECRET` tiene menos de 32 bytes. No reutilice credenciales del repositorio ni las de una instalación anterior.
+
+Compose publica el proxy HTTP solo en `127.0.0.1:80` y no publica el puerto de la API. Mantenga ese enlace local y termine TLS en un proxy confiable antes de habilitar acceso remoto; no publique el servicio en HTTP sin cifrar.
 
 ### Paso 2.2: Construcción y Lanzamiento de la Pila
 ```bash
@@ -95,7 +97,7 @@ Acceda a la consola de MySQL y cree la base de datos y usuario dedicado:
 sudo mysql
 
 CREATE DATABASE csirt_incidentes CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'csirt_user'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'ClaveMuySegura2026!';
+CREATE USER 'csirt_user'@'localhost' IDENTIFIED WITH caching_sha2_password BY '<secreto-unico-generado-fuera-del-repositorio>';
 GRANT ALL PRIVILEGES ON csirt_incidentes.* TO 'csirt_user'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
@@ -115,7 +117,7 @@ npm ci --omit=dev
 
 # Configurar variables de entorno
 cp .env.example .env
-# Configure DATABASE_URL="mysql://csirt_user:ClaveMuySegura2026!@localhost:3306/csirt_incidentes"
+# Configure DATABASE_URL with your MySQL account and URL-encoded password
 
 # Ejecutar migraciones y siembra
 npx prisma migrate deploy
@@ -165,6 +167,7 @@ Para desplegar en servicios Serverless o PaaS:
    - `PERSISTENCE=prisma`
    - `JWT_SECRET=<secreto_aleatorio>`
    - `CLIENT_ORIGIN=https://su-dominio.up.railway.app`
+   - `HOST=0.0.0.0` (solo cuando el ingress de la plataforma gestione HTTPS).
 
 ---
 
@@ -177,8 +180,9 @@ sudo crontab -e
 ```
 Agregue la siguiente directiva para ejecutar el respaldo a las 02:00 AM:
 ```bash
-0 2 * * * mysqldump -u csirt_user -p'ClaveMuySegura2026!' csirt_incidentes | gzip > /backups/csirt_$(date +\%F).sql.gz
+0 2 * * * mysqldump --defaults-extra-file=/root/.my.cnf csirt_incidentes | gzip > /backups/csirt_$(date +\%F).sql.gz
 ```
+El archivo `/root/.my.cnf` debe contener las credenciales del usuario de respaldo y tener permisos `0600`; no incluya contraseñas en la línea de comandos ni en crontab.
 
 ### 5.2 Procedimiento de Restauración
 ```bash
@@ -191,11 +195,10 @@ gunzip < /backups/csirt_2026-10-19.sql.gz | mysql -u csirt_user -p csirt_inciden
 
 - [x] **Protección contra Inyecciones SQL:** Verificada mediante consultas parametrizadas con Prisma ORM.
 - [x] **Sanitización contra XSS:** Implementada con `sanitize-html` eliminando scripts en el cuerpo de peticiones.
-- [x] **Autenticación y Sesiones:** Tokens JWT firmados con expiración estricta de 8 horas.
-- [x] **Cifrado de Credenciales:** Hashing unidireccional con Bcrypt (10 rondas de salt).
+- [x] **Autenticación y Sesiones:** Tokens JWT firmados con expiración predeterminada de 30 minutos.
+- [x] **Cifrado de Credenciales:** Hashing unidireccional con Bcrypt (12 rondas de salt).
 - [x] **Control de Acceso (RBAC):** Restricción en backend (`autorizar('ADMIN')` para eliminación, `SUPERVISOR` para estados).
 - [x] **Validación de Datos:** Esquemas declarativos Zod que impiden campos no reconocidos y tipos erróneos.
 - [x] **Cabeceras HTTP de Seguridad:** `helmet` activo (`CSP`, `HSTS`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`).
 - [x] **Mitigación de DoS / Fuerza Bruta:** `express-rate-limit` (300 req/15 min en API, 15 req/15 min en login).
 - [x] **Optimización de Rendimiento:** Imágenes en formato WebP con compresión de 93.6% y cabeceras de caché HTTP.
-
