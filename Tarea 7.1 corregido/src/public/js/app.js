@@ -19,7 +19,7 @@ async function cargarIncidentes() {
     });
     if (!res.ok) {
       if (res.status === 401) {
-        estadoElement.textContent = "Credenciales de editor incorrectas o no ingresadas.";
+        estadoElement.textContent = "Credenciales incorrectas o no ingresadas.";
         return;
       }
       throw new Error(`Respuesta HTTP ${res.status}`);
@@ -85,7 +85,11 @@ formEstado.addEventListener("submit", async (e) => {
 
     const resultado = await res.json();
     if (!res.ok) {
-      alert(`Error ${res.status}: ${resultado.error}`);
+      const mensaje =
+        res.status === 429
+          ? "Límite de solicitudes alcanzado. Espere 15 minutos."
+          : resultado.error;
+      alert(`Error ${res.status}: ${mensaje}`);
     } else {
       alert("Estado actualizado exitosamente");
       await cargarIncidentes();

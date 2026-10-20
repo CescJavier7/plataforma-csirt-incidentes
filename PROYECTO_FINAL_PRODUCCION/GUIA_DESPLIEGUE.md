@@ -49,6 +49,7 @@ nano .env
 > openssl rand -base64 48
 > ```
 > Configure también contraseñas únicas para MySQL y `ADMIN_PASSWORD`, `SUPERVISOR_PASSWORD` y `ANALISTA_PASSWORD`. La aplicación falla al arrancar si falta una variable crítica o si `JWT_SECRET` tiene menos de 32 bytes.
+> Como `MYSQL_PASSWORD` se incluye en la URL de conexión de Compose, genérelo en hexadecimal: `openssl rand -hex 24`.
 
 El proxy se publica solo en `127.0.0.1:80`; no exponga el puerto 3000 ni HTTP directamente. Para acceso remoto, use un terminador TLS confiable y rote los secretos antiguos.
 

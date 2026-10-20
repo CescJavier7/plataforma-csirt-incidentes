@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ----------------------------------------------------------------------------
   # Base de Datos Relacional de Producción: MySQL 8.4 LTS

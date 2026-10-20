@@ -1,6 +1,6 @@
 # Evidencias automáticas – Pruebas de seguridad (Tarea 6)
 
-> Generado por `tests/seguridad.test.js` el 19/10/2026, 7:58:56 p. m.. Persistencia: memoria.
+> Generado por `tests/seguridad.test.js` el 19/10/2026, 8:27:24 p. m.. Persistencia: memoria.
 
 ### Caso 1: Acceso sin token
 
@@ -26,7 +26,7 @@ GET /api/incidentes
 **Entrada**
 ```http
 DELETE /api/incidentes/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…12B2HWK858
 
 {}
 ```
@@ -79,7 +79,7 @@ Content-Type: application/json
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…12B2HWK858
 
 {
   "titulo": 123,
@@ -116,7 +116,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…12B2HWK858
 
 {
   "titulo": "<script>alert(\"XSS\")</script>Caída del servidor web",
@@ -138,8 +138,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
     "resolucion": null,
     "prioridad": "ALTA",
     "estado": "ABIERTO",
-    "createdAt": "2026-10-20T00:58:55.720Z",
-    "updatedAt": "2026-10-20T00:58:55.720Z"
+    "createdAt": "2026-10-20T01:27:24.201Z",
+    "updatedAt": "2026-10-20T01:27:24.201Z"
   }
 }
 ```
@@ -169,7 +169,7 @@ Content-Type: application/json
   "success": true,
   "message": "Inicio de sesión exitoso",
   "data": {
-    "token": "eyJhbGciOiJIUzI1NiIs…S4DS9El3fg",
+    "token": "eyJhbGciOiJIUzI1NiIs…12B2HWK858",
     "tipo": "Bearer",
     "usuario": {
       "id": 3,
@@ -187,7 +187,7 @@ Content-Type: application/json
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…12B2HWK858
 
 {
   "titulo": "Fallo en VPN corporativa",
@@ -209,8 +209,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
     "resolucion": null,
     "prioridad": "CRITICA",
     "estado": "ABIERTO",
-    "createdAt": "2026-10-20T00:58:55.750Z",
-    "updatedAt": "2026-10-20T00:58:55.750Z"
+    "createdAt": "2026-10-20T01:27:24.231Z",
+    "updatedAt": "2026-10-20T01:27:24.231Z"
   }
 }
 ```
@@ -226,7 +226,7 @@ GET /api/incidentes → 200, total=3; fila encontrada: { id: 3, titulo: "Fallo e
 ```http
 PUT /api/incidentes/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…PqQ0Frfu1M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…8dsYSO9uOg
 
 {
   "estado": "EN_PROCESO"
@@ -246,8 +246,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…PqQ0Frfu1M
     "resolucion": null,
     "prioridad": "CRITICA",
     "estado": "EN_PROCESO",
-    "createdAt": "2026-10-20T00:58:55.750Z",
-    "updatedAt": "2026-10-20T00:58:55.781Z"
+    "createdAt": "2026-10-20T01:27:24.231Z",
+    "updatedAt": "2026-10-20T01:27:24.261Z"
   }
 }
 ```
@@ -257,7 +257,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs…PqQ0Frfu1M
 **Entrada**
 ```http
 DELETE /api/incidentes/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…S4DS9El3fg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…12B2HWK858
 
 {}
 ```
@@ -301,7 +301,7 @@ Content-Type: application/json
 ```http
 POST /api/incidentes
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…PqQ0Frfu1M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…8dsYSO9uOg
 
 {
   "titulo": "Intento no autorizado",
@@ -358,7 +358,7 @@ GET /api/health
 ```json
 {
   "status": "UP",
-  "timestamp": "2026-10-20T00:58:56.077Z"
+  "timestamp": "2026-10-20T01:27:24.557Z"
 }
 ```
 **Verificación adicional:**
@@ -376,7 +376,7 @@ x-powered-by: (ausente)
 **Entrada**
 ```http
 DELETE /api/incidentes/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs…G7kC0_gZIk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs…jTgxE6XG-o
 
 {}
 ```

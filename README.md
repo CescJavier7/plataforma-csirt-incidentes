@@ -67,6 +67,7 @@ Para ejecutar la plataforma de forma inmediata sin necesidad de levantar bases d
 cd PROYECTO_FINAL_PRODUCCION
 cp .env.example .env
 # Configure todas las variables obligatorias con secretos únicos (JWT_SECRET de al menos 32 bytes).
+# Para MYSQL_PASSWORD use un valor hexadecimal: openssl rand -hex 24
 npm install
 npm test       # Ejecuta la suite de 17 pruebas unitarias y de integración (100% pass)
 npm start      # Inicia el servidor en http://localhost:3000 con persistencia en memoria

@@ -16,11 +16,11 @@
       <h2>Cerrar o Gestionar Incidente</h2>
       <form id="form-estado">
         <div>
-          <label for="editor-usuario">Usuario editor:</label>
+          <label for="editor-usuario">Usuario asignado (Analista, Supervisor o Admin):</label>
           <input type="text" id="editor-usuario" autocomplete="username" required>
         </div>
         <div>
-          <label for="editor-password">Contraseña del editor:</label>
+          <label for="editor-password">Contraseña:</label>
           <input type="password" id="editor-password" autocomplete="current-password" required>
         </div>
         <button type="button" id="btn-consultar">Consultar incidentes</button>
@@ -40,7 +40,7 @@
           <label for="resolucion">Resolución técnica (Obligatoria para Cierre):</label>
           <textarea id="resolucion" placeholder="Detalle las acciones de contención realizadas..."></textarea>
         </div>
-        <button type="submit" id="btn-actualizar">Actualizar Estado</button>
+        <button type="submit" id="btn-actualizar">Actualizar estado (Supervisor/Admin)</button>
       </form>
     </section>
 

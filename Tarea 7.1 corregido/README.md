@@ -8,7 +8,7 @@
 
 ## Configuración de acceso
 
-Antes de iniciar el servidor, configure `INCIDENTE_EDITOR_USERNAME` y `INCIDENTE_EDITOR_PASSWORD` en el almacén seguro de variables del entorno; la contraseña debe tener al menos 12 caracteres. No existen credenciales predeterminadas. La API exige estas credenciales para consultar y modificar incidentes, y el navegador no las guarda. El servidor escucha en `127.0.0.1` por defecto; permita acceso remoto solo detrás de un terminador TLS confiable.
+Antes de iniciar el servidor, configure variables únicas `INCIDENTE_ANALISTA_USERNAME/PASSWORD`, `INCIDENTE_SUPERVISOR_USERNAME/PASSWORD` e `INCIDENTE_ADMIN_USERNAME/PASSWORD` en el almacén seguro del entorno; cada contraseña debe tener al menos 12 caracteres. No existen credenciales predeterminadas. Analistas pueden consultar; supervisores y administradores también pueden actualizar estados. La API limita las consultas a 100 solicitudes por IP cada 15 minutos, intentos fallidos de autenticación a 10 en ese período y cambios a 5. Las credenciales no se guardan en `localStorage` ni `sessionStorage`; se mantienen en los campos de la página mientras esté abierta. El servidor escucha en `127.0.0.1` por defecto; permita acceso remoto solo detrás de un terminador TLS confiable. Si hay proxy, defina `TRUST_PROXY_HOPS` con el número exacto de saltos confiables y bloquee el acceso directo al backend. Los límites usan memoria local de una instancia; despliegues con réplicas requieren un almacén compartido como Redis.
 
 ---
 

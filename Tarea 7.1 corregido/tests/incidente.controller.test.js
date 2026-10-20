@@ -1,7 +1,11 @@
 const request = require("supertest");
 process.env.NODE_ENV = "test";
-process.env.INCIDENTE_EDITOR_USERNAME = "editor-test";
-process.env.INCIDENTE_EDITOR_PASSWORD = "test-password-not-for-production";
+process.env.INCIDENTE_ANALISTA_USERNAME = "analista-test";
+process.env.INCIDENTE_ANALISTA_PASSWORD = "test-analista-password";
+process.env.INCIDENTE_SUPERVISOR_USERNAME = "supervisor-test";
+process.env.INCIDENTE_SUPERVISOR_PASSWORD = "test-supervisor-password";
+process.env.INCIDENTE_ADMIN_USERNAME = "admin-test";
+process.env.INCIDENTE_ADMIN_PASSWORD = "test-admin-password";
 const app = require("../src/server");
 
 describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)", () => {
@@ -11,10 +15,12 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .get("/api/incidentes")
-        .auth("editor-test", "test-password-not-for-production");
+        .auth("analista-test", "test-analista-password");
 
       // Assert
       expect(response.status).toBe(200);
+      expect(response.headers["content-security-policy"]).toBeDefined();
+      expect(response.headers["x-content-type-options"]).toBe("nosniff");
       expect(response.headers["cache-control"]).toBe("private, no-store");
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBeGreaterThan(0);
@@ -24,7 +30,7 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .get("/api/incidentes")
-        .auth("editor-test", "test-password-not-for-production");
+        .auth("analista-test", "test-analista-password");
       const primerIncidente = response.body[0];
 
       // Assert: campos indispensables presentes para la vista
@@ -55,7 +61,7 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .get(`/api/incidentes/${idInvalido}`)
-        .auth("editor-test", "test-password-not-for-production");
+        .auth("analista-test", "test-analista-password");
 
       // Assert
       expect(response.status).toBe(400);
@@ -70,7 +76,7 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .get(`/api/incidentes/${idNegativo}`)
-        .auth("editor-test", "test-password-not-for-production");
+        .auth("analista-test", "test-analista-password");
 
       // Assert
       expect(response.status).toBe(400);
@@ -84,7 +90,7 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .get(`/api/incidentes/${idInexistente}`)
-        .auth("editor-test", "test-password-not-for-production");
+        .auth("analista-test", "test-analista-password");
 
       // Assert
       expect(response.status).toBe(404);
@@ -98,7 +104,7 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .get(`/api/incidentes/${idExistente}`)
-        .auth("editor-test", "test-password-not-for-production");
+        .auth("analista-test", "test-analista-password");
 
       // Assert
       expect(response.status).toBe(200);
@@ -118,10 +124,20 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       expect(response.headers["www-authenticate"]).toMatch(/^Basic /);
     });
 
+    test("ANALISTA puede consultar pero no actualizar estados", async () => {
+      const response = await request(app)
+        .patch("/api/incidentes/1/estado")
+        .auth("analista-test", "test-analista-password")
+        .send({ nuevoEstado: "EN_PROCESO" });
+
+      expect(response.status).toBe(403);
+      expect(response.body.error).toBe("Permiso insuficiente");
+    });
+
     test("Debe rechazar credenciales incorrectas", async () => {
       const response = await request(app)
         .patch("/api/incidentes/1/estado")
-        .auth("editor-test", "incorrect-password")
+        .auth("analista-test", "incorrect-password")
         .send({ nuevoEstado: "EN_PROCESO" });
 
       expect(response.status).toBe(401);
@@ -137,7 +153,7 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .patch("/api/incidentes/1/estado")
-        .auth("editor-test", "test-password-not-for-production")
+        .auth("supervisor-test", "test-supervisor-password")
         .send(payload);
 
       // Assert
@@ -155,13 +171,14 @@ describe("Pruebas de Integración - API de Incidentes y Controlador (Supertest)"
       // Act
       const response = await request(app)
         .patch("/api/incidentes/3/estado")
-        .auth("editor-test", "test-password-not-for-production")
+        .auth("supervisor-test", "test-supervisor-password")
         .send(payload);
 
       // Assert
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty("estado", "EN_PROCESO");
     });
+
   });
 
 });
