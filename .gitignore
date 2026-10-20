@@ -1,0 +1,51 @@
+# ==============================================================================
+# .gitignore para la Plataforma CSIRT / SOC (Repositorio Unificado)
+# ==============================================================================
+
+# Dependencias de Node.js (se instalan con npm install en cada entorno)
+node_modules/
+*/node_modules/
+*/*/node_modules/
+*/*/*/node_modules/
+
+# Secretos y Variables de Entorno (Regla OWASP A04: Nunca versionar secretos reales)
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# Logs de depuración y ejecución
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Cobertura de pruebas (Coverage)
+coverage/
+*/coverage/
+*.lcov
+.nyc_output/
+
+# Archivos de editores y del sistema operativo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.antigravity/
+
+# Artefactos de compilación / build
+dist/
+build/
+.cache/
+
+# Archivos temporales de SQLite o dumps de base de datos
+*.sqlite
+*.sqlite3
+*.db
+*.sql.gz
+
