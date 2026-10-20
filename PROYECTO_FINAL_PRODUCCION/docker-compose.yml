@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # Base de Datos Relacional de Producción: MySQL 8.4 LTS
+  # ----------------------------------------------------------------------------
+  db:
+    image: mysql:8.4
+    container_name: csirt_mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_super_secure_pass_2026}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-csirt_incidentes}
+      MYSQL_USER: ${MYSQL_USER:-csirt_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-csirt_secure_pass_2026}
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max_connections=200
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+    networks:
+      - csirt_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root_super_secure_pass_2026}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ----------------------------------------------------------------------------
+  # API y Aplicación Web: Node.js 22 LTS Alpine
+  # ----------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: csirt_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      PERSISTENCE: prisma
+      DATABASE_URL: mysql://${MYSQL_USER:-csirt_user}:${MYSQL_PASSWORD:-csirt_secure_pass_2026}@db:3306/${MYSQL_DATABASE:-csirt_incidentes}
+      JWT_SECRET: ${JWT_SECRET:-cambiar_por_clave_criptografica_segura_de_produccion_2026}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      CLIENT_ORIGIN: ${CLIENT_ORIGIN:-http://localhost,http://localhost:80,http://localhost:3000}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+      SUPERVISOR_PASSWORD: ${SUPERVISOR_PASSWORD:-Supervisor123!}
+      ANALISTA_PASSWORD: ${ANALISTA_PASSWORD:-Analista123!}
+    command: >
+      sh -c "npx prisma migrate deploy &&
+             node prisma/seed.js &&
+             node src/server.js"
+    expose:
+      - "3000"
+    networks:
+      - csirt_network
+
+  # ----------------------------------------------------------------------------
+  # Proxy Inverso Perimetral y Caché: Nginx Alpine
+  # ----------------------------------------------------------------------------
+  proxy:
+    image: nginx:1.27-alpine
+    container_name: csirt_nginx_proxy
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    networks:
+      - csirt_network
+
+networks:
+  csirt_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+

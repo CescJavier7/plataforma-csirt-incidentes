@@ -1,0 +1,47 @@
+{
+  "name": "plataforma-incidentes-csirt",
+  "version": "1.0.0",
+  "description": "Plataforma de Gestion y Respuesta a Incidentes CSIRT/SOC - Produccion Unificada",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "node --test tests/*.test.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:seed": "node prisma/seed.js",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": [
+    "ciberseguridad",
+    "incidentes",
+    "csirt",
+    "soc",
+    "express",
+    "prisma",
+    "mysql",
+    "jwt",
+    "rbac",
+    "zod",
+    "docker"
+  ],
+  "author": "Equipo de Desarrollo e Ingenieria CSIRT",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "sanitize-html": "^2.18.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prisma": "^6.4.1"
+  }
+}
+

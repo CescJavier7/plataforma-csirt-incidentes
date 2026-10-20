@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 https://localhost:3000; base-uri 'self'; form-action 'self'; object-src 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <title>CSIRT SOC · Plataforma de Gestión de Incidentes</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="barra">
+    <h1>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+      CSIRT Security Operations Center
+    </h1>
+    <div id="sesion" class="sesion" hidden>
+      <span id="sesion-usuario"></span>
+      <span id="sesion-rol" class="insignia"></span>
+      <button id="btn-logout" type="button" class="btn secundario">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Mensajes globales -->
+    <div id="mensaje" class="mensaje" role="status" aria-live="polite" hidden></div>
+
+    <!-- ===================== VISTA LOGIN ===================== -->
+    <section id="vista-login" class="tarjeta login">
+      <h2>Autenticación de Operador</h2>
+      <form id="form-login" novalidate>
+        <div>
+          <label for="login-email">Correo Electrónico Corporativo</label>
+          <input id="login-email" name="email" type="email" autocomplete="username" placeholder="usuario@incidentes.com" required maxlength="120" />
+        </div>
+
+        <div>
+          <label for="login-password">Contraseña</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="8" maxlength="72" />
+        </div>
+
+        <button type="submit" class="btn">Ingresar al SOC</button>
+      </form>
+
+      <details class="demo">
+        <summary>Credenciales de Prueba (RBAC)</summary>
+        <ul>
+          <li><strong>ADMIN:</strong> <code>admin@incidentes.com</code> / <code>Admin123!</code></li>
+          <li><strong>SUPERVISOR:</strong> <code>supervisor@incidentes.com</code> / <code>Supervisor123!</code></li>
+          <li><strong>ANALISTA:</strong> <code>analista@incidentes.com</code> / <code>Analista123!</code></li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ===================== VISTA OPERATIVA ===================== -->
+    <section id="vista-panel" hidden>
+      <!-- Registro de Incidente (ANALISTA, ADMIN) -->
+      <article id="bloque-crear" class="tarjeta" data-roles="ANALISTA,ADMIN">
+        <h2>Registrar Nuevo Incidente de Seguridad</h2>
+        <form id="form-crear" novalidate>
+          <div>
+            <label for="crear-titulo">Título del Incidente</label>
+            <input id="crear-titulo" name="titulo" type="text" placeholder="Ej: Fuga de credenciales en repositorio público" required minlength="5" maxlength="120" />
+          </div>
+
+          <div>
+            <label for="crear-descripcion">Descripción y Vectores de Ataque</label>
+            <textarea id="crear-descripcion" name="descripcion" rows="3" placeholder="Detalle el host afectado, IP origen, hash de artefacto o impacto estimado..." required minlength="10"></textarea>
+          </div>
+
+          <div class="fila">
+            <div>
+              <label for="crear-prioridad">Nivel de Severidad / Prioridad</label>
+              <select id="crear-prioridad" name="prioridad">
+                <option value="BAJA">BAJA</option>
+                <option value="MEDIA" selected>MEDIA</option>
+                <option value="ALTA">ALTA</option>
+                <option value="CRITICA">CRÍTICA</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn">Reportar Incidente</button>
+        </form>
+      </article>
+
+      <!-- Topología de Red y Arquitectura del CSIRT -->
+      <article class="tarjeta">
+        <h2>Monitoreo Perimetral y Topología de Red</h2>
+        <figure style="margin: 0;">
+          <img 
+            src="assets/diagrama-red.webp" 
+            alt="Topología de Red del CSIRT" 
+            class="topologia-img"
+            width="610" 
+            height="323" 
+            loading="lazy"
+          />
+          <figcaption style="font-size: 0.8rem; color: var(--suave); margin-top: 0.5rem;">
+            Arquitectura de red perimetral bajo monitoreo activo SOC (formato optimizado WebP para rendimiento).
+          </figcaption>
+        </figure>
+      </article>
+
+      <!-- Catálogo de Incidentes -->
+      <article class="tarjeta">
+        <div class="cabecera-tabla">
+          <h2>Bandeja de Incidentes Registrados</h2>
+          <div class="filtros">
+            <select id="filtro-estado" aria-label="Filtrar por estado">
+              <option value="">Todos los Estados</option>
+              <option value="ABIERTO">ABIERTO</option>
+              <option value="EN_PROCESO">EN PROCESO</option>
+              <option value="RESUELTO">RESUELTO</option>
+              <option value="CERRADO">CERRADO</option>
+            </select>
+            <select id="filtro-prioridad" aria-label="Filtrar por prioridad">
+              <option value="">Todas las Prioridades</option>
+              <option value="BAJA">BAJA</option>
+              <option value="MEDIA">MEDIA</option>
+              <option value="ALTA">ALTA</option>
+              <option value="CRITICA">CRÍTICA</option>
+            </select>
+            <button id="btn-refrescar" type="button" class="btn secundario">Refrescar</button>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 70px;">ID</th>
+                <th style="width: 250px;">Título</th>
+                <th>Descripción y Resolución</th>
+                <th style="width: 110px;">Prioridad</th>
+                <th style="width: 140px;">Estado</th>
+                <th style="width: 180px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-incidentes"></tbody>
+          </table>
+        </div>
+        <p id="tabla-vacia" class="vacio" hidden>No hay incidentes que coincidan con los criterios seleccionados.</p>
+      </article>
+    </section>
+  </main>
+
+  <!-- Template para Fila de Incidente -->
+  <template id="tpl-fila">
+    <tr>
+      <td data-campo="id" style="font-weight: 700; color: #38bdf8;"></td>
+      <td data-campo="titulo" style="font-weight: 600;"></td>
+      <td data-campo="descripcion"></td>
+      <td><span data-campo="prioridad" class="insignia"></span></td>
+      <td>
+        <select data-campo="estado" aria-label="Estado del incidente">
+          <option value="ABIERTO">ABIERTO</option>
+          <option value="EN_PROCESO">EN_PROCESO</option>
+          <option value="RESUELTO">RESUELTO</option>
+          <option value="CERRADO">CERRADO</option>
+        </select>
+      </td>
+      <td class="acciones">
+        <button type="button" class="btn pequeno" data-accion="actualizar" data-roles="SUPERVISOR,ADMIN">Guardar</button>
+        <button type="button" class="btn pequeno peligro" data-accion="eliminar" data-roles="ADMIN">Eliminar</button>
+      </td>
+    </tr>
+  </template>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
+
