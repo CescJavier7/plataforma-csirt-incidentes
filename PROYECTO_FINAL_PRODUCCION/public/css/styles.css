@@ -25,11 +25,19 @@ body {
   line-height: 1.5;
 }
 
+/* RESPONSIVE: imágenes y medios nunca superan el ancho de su contenedor */
+img, svg, video { max-width: 100%; }
+
 .barra {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  /* RESPONSIVE: antes el título y la sesión quedaban forzados en una sola fila
+     y se comprimían en pantallas angostas; con wrap la sesión baja a otra línea */
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  /* RESPONSIVE: padding lateral fluido (1rem en móvil -> 2rem en escritorio) */
+  padding: 1rem clamp(1rem, 4vw, 2rem);
   background: #090d16;
   border-bottom: 1px solid var(--borde);
   position: sticky;
@@ -37,7 +45,10 @@ body {
   z-index: 100;
 }
 .barra h1 {
-  font-size: 1.25rem;
+  /* RESPONSIVE: tamaño fluido entre 1.05rem (móvil) y 1.25rem (escritorio)
+     para que el título no se parta en 4 líneas en celulares */
+  font-size: clamp(1.05rem, 0.9rem + 0.8vw, 1.25rem);
+  line-height: 1.25;
   margin: 0;
   display: flex;
   align-items: center;
@@ -45,16 +56,21 @@ body {
   font-weight: 700;
   color: #38bdf8;
 }
+/* RESPONSIVE: el ícono del escudo ya no se encoge cuando el título se envuelve */
+.barra h1 svg { flex-shrink: 0; }
 .sesion {
   display: flex;
-  gap: 1rem;
+  /* RESPONSIVE: nombre, rol y botón se reacomodan en vez de desbordar */
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   align-items: center;
 }
 
 main {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
+  /* RESPONSIVE: márgenes y padding fluidos; en móvil se recupera espacio útil */
+  margin: clamp(1rem, 3vw, 2rem) auto;
+  padding: 0 clamp(0.75rem, 3vw, 1.5rem);
 }
 
 .tarjeta {
@@ -124,14 +140,22 @@ input:user-invalid, textarea:user-invalid { border-color: var(--peligro); }
   gap: 1rem;
   margin-bottom: 1rem;
 }
-.filtros { display: flex; gap: 0.75rem; align-items: center; }
-.filtros select { width: auto; }
+/* RESPONSIVE: CAUSA PRINCIPAL del desborde horizontal en móvil.
+   Los dos selects + el botón "Refrescar" no podían envolverse y ensanchaban
+   toda la página (por eso la barra superior se veía más corta que el contenido).
+   Ahora se envuelven y cada control crece/encoge según el espacio disponible. */
+.filtros { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.filtros select { width: auto; flex: 1 1 auto; min-width: 0; }
 
 table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid var(--borde); vertical-align: top; }
 th { background: #0f172a; color: var(--suave); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
 td select { width: auto; padding: 0.35rem 0.5rem; }
-.acciones { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+/* RESPONSIVE: antes ".acciones" tenía display:flex sobre el <td>, lo que sacaba
+   la celda del modelo de tabla y descuadraba los bordes de cada fila en
+   escritorio. Ahora la celda sigue siendo table-cell y el espacio entre botones
+   se logra con márgenes. */
+.acciones .btn { margin: 0 0.35rem 0.35rem 0; }
 .vacio { color: var(--suave); text-align: center; padding: 2rem; font-style: italic; }
 
 .insignia {
@@ -195,3 +219,131 @@ td select { width: auto; padding: 0.35rem 0.5rem; }
   display: block;
 }
 
+/* =====================================================================
+   DISEÑO RESPONSIVE (mobile-first por puntos de quiebre)
+   Puntos de quiebre usados:
+     >= 1024px  Escritorio / laptop  -> panel en cuadrícula de 2 columnas
+     <= 1023px  Tablet               -> tabla más compacta
+     <=  768px  Tablet vertical/móvil-> cabecera apilada, tabla en tarjetas
+     <=  480px  Móvil pequeño        -> botones a ancho completo, menos padding
+   ===================================================================== */
+
+/* ---------- Escritorio (>= 1024px) ---------- */
+@media (min-width: 1024px) {
+  /* Antes todas las tarjetas se apilaban en una sola columna incluso en
+     monitores anchos. Ahora "Registrar incidente" y "Topología" quedan lado a
+     lado y la bandeja de incidentes ocupa todo el ancho debajo. */
+  #vista-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+  }
+  #vista-panel > .tarjeta { margin-bottom: 0; }
+  #vista-panel > .bandeja { grid-column: 1 / -1; }
+  /* SUPERVISOR no ve el formulario de registro (queda [hidden]); en ese caso la
+     tarjeta de topología toma todo el ancho para no dejar un hueco vacío. */
+  #bloque-crear[hidden] + .tarjeta { grid-column: 1 / -1; }
+}
+
+/* ---------- Tablet (<= 1023px) ---------- */
+@media (max-width: 1023px) {
+  /* Celdas con menos padding para que las 6 columnas quepan sin scroll lateral */
+  th, td { padding: 0.6rem 0.5rem; }
+  .tarjeta { padding: 1.25rem; }
+}
+
+/* ---------- Tablet vertical y móvil (<= 768px) ---------- */
+@media (max-width: 768px) {
+  /* Cabecera: el título ocupa su propia fila y la sesión baja a la siguiente.
+     El botón "Cerrar sesión" se alinea a la derecha con margin-left:auto. */
+  .barra { padding-block: 0.75rem; }
+  .barra h1 { flex: 1 1 100%; }
+  .sesion { flex: 1 1 100%; font-size: 0.9rem; }
+  .sesion .btn { margin-left: auto; padding: 0.45rem 0.9rem; }
+
+  .tarjeta h2 { font-size: 1.05rem; }
+
+  /* Campos de formulario en fila (.fila) pasan a columna */
+  .fila { flex-direction: column; }
+
+  /* Cabecera de la bandeja: título arriba y filtros a todo el ancho debajo */
+  .cabecera-tabla { flex-direction: column; align-items: stretch; }
+  .cabecera-tabla h2 { margin-bottom: 0; }
+  .filtros #btn-refrescar { flex: 1 1 100%; }
+
+  /* TABLA -> TARJETAS: una tabla de 6 columnas no es legible en 360-768px.
+     Cada <tr> se muestra como una tarjeta y cada <td> como una fila
+     "etiqueta : valor"; la etiqueta sale del atributo data-label del HTML. */
+  .tabla-contenedor { overflow-x: visible !important; }
+  .tabla-incidentes,
+  .tabla-incidentes tbody,
+  .tabla-incidentes tr,
+  .tabla-incidentes td { display: block; width: 100%; }
+  /* El thead se oculta visualmente pero sigue disponible para lectores de pantalla */
+  .tabla-incidentes thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .tabla-incidentes tr {
+    background: var(--fondo);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 0.5rem 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+  .tabla-incidentes td {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.55rem 0;
+    border-bottom: 1px dashed var(--borde);
+    overflow-wrap: anywhere; /* evita que hashes/IPs largos desborden la tarjeta */
+  }
+  .tabla-incidentes td:last-child { border-bottom: 0; }
+  /* La descripción puede incluir la caja de "Resolución"; en grid quedaba
+     aplastada en la columna de 6.5rem. Se muestra en bloque: etiqueta arriba,
+     texto y resolución debajo usando todo el ancho de la tarjeta. */
+  .tabla-incidentes td[data-campo="descripcion"] { display: block; }
+  .tabla-incidentes td[data-campo="descripcion"]::before { display: block; margin-bottom: 0.25rem; }
+  .tabla-incidentes td::before {
+    content: attr(data-label);
+    color: var(--suave);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  /* Insignia y select no se estiran a toda la celda */
+  .tabla-incidentes td > .insignia { justify-self: start; }
+  .tabla-incidentes td select { width: 100%; }
+  /* Acciones: botones con área táctil mayor y repartidos en el ancho */
+  .tabla-incidentes td.acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tabla-incidentes td.acciones::before { flex: 1 1 100%; }
+  .tabla-incidentes td.acciones .btn { flex: 1 1 0; min-height: 2.5rem; margin: 0; }
+  /* ANALISTA no tiene botones de acción: se oculta la fila "Acciones" vacía */
+  .tabla-incidentes td.acciones:not(:has(.btn:not([hidden]))) { display: none; }
+}
+
+/* ---------- Móvil pequeño (<= 480px) ---------- */
+@media (max-width: 480px) {
+  .tarjeta { padding: 1rem; border-radius: 10px; }
+  .login { margin: 1.5rem auto; }
+  /* El nombre del usuario largo se recorta con "..." en vez de empujar el botón */
+  #sesion-usuario {
+    max-width: 55vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Filtros uno debajo de otro, cada uno a ancho completo */
+  .filtros select { flex-basis: 100%; }
+  /* Botones principales de formularios a ancho completo y fáciles de tocar */
+  form > .btn { width: 100%; min-height: 2.75rem; }
+  .tabla-incidentes td { grid-template-columns: 5.5rem minmax(0, 1fr); }
+}
