@@ -1,10 +1,10 @@
 # Especificación y Skill de Desarrollo: Proyecto Final Integrador (Unidad 8)
 
-## 🎯 Objetivo General
+## Objetivo General
 
 Integrar, desplegar, monitorear y documentar la versión final de la **Plataforma Web para la Gestión de Incidentes de Ciberseguridad**.
 
-La solución debe estar desplegada en producción en la nube con HTTPS activo, contener un CRUD persistente en base de datos relacional, control de acceso basado en roles (JWT), validación estricta en servidor, ruta de salud (*health check*), registros estructurados (*logging* sin secretos) y un expediente completo con documentación técnica, manual de usuario, guion de defensa de hasta 20 minutos y matriz de lecciones aprendidas.
+La solución debe estar desplegada en producción en la nube con HTTPS activo, contener un CRUD persistente en base de datos relacional, control de acceso basado en roles (JWT), validación estricta en servidor, ruta de salud (*health check*), registros estructurados (*logging* sin secretos) y un expediente completo con documentación técnica y manual de usuario.
 
 ---
 
