@@ -1,0 +1,33 @@
+{
+  "name": "api-incidentes-persistente",
+  "version": "1.0.0",
+  "description": "API REST para gestion de incidentes con persistencia MySQL y Prisma ORM",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "node --test tests/persistence.test.js",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": [
+    "express",
+    "prisma",
+    "mysql",
+    "zod",
+    "rest-api"
+  ],
+  "author": "PUCE Virtual - Desarrollo en Plataformas",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prisma": "^6.4.1"
+  }
+}

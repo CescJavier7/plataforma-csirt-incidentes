@@ -1,0 +1,53 @@
+### Variable base
+@baseUrl = http://localhost:3000/api/incidentes
+
+### Healthcheck
+GET http://localhost:3000/api/health
+Content-Type: application/json
+
+### Caso 1: Crear incidente valido
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "titulo": "Falla en servidor de admision",
+  "descripcion": "El servidor principal dejo de responder durante el turno nocturno.",
+  "prioridad": "ALTA",
+  "estado": "ABIERTO"
+}
+
+### Caso 2: Crear incidente con titulo invalido (validacion Zod -> 400)
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "titulo": "",
+  "descripcion": "Prueba de validacion con titulo vacio.",
+  "prioridad": "MEDIA",
+  "estado": "ABIERTO"
+}
+
+### Caso 3: Filtrar incidentes por estado (estado=ABIERTO)
+GET {{baseUrl}}?estado=ABIERTO
+Content-Type: application/json
+
+### Caso 4: Consultar incidente inexistente (404 controlado)
+GET {{baseUrl}}/99999
+Content-Type: application/json
+
+### Actualizar incidente (PUT)
+PUT {{baseUrl}}/1
+Content-Type: application/json
+
+{
+  "estado": "EN_PROCESO",
+  "prioridad": "CRITICA"
+}
+
+### Caso 5: Consultar incidente existente para verificar persistencia
+GET {{baseUrl}}/18
+Content-Type: application/json
+
+### Eliminar incidente (DELETE)
+DELETE {{baseUrl}}/1
+Content-Type: application/json
