@@ -1,0 +1,858 @@
+/* ==========================================================================
+   SISTEMA DE GESTIÓN DE INCIDENTES DE CIBERSEGURIDAD (SOC)
+   Hoja de Estilos Principal: styles.css
+   Arquitectura: CSS3 Puro | Mobile-First | WCAG 2.2 AA Compliance
+   Módulos: Box Model, Flexbox (1D), CSS Grid (2D) y Media Queries
+   ========================================================================== */
+
+/* ==========================================================================
+   1. RESETEO UNIVERSAL Y MODELO DE CAJA (BOX MODEL)
+   Decisión técnica y pedagógica:
+   Por defecto, el navegador calcula el ancho de un elemento sumando solo el
+   contenido (`box-sizing: content-box`). Al aplicar el reseteo universal con
+   `box-sizing: border-box`, el padding y los bordes quedan incluidos dentro
+   del ancho y alto definidos, evitando desbordamientos inesperados y facilitando
+   el cálculo milimétrico de la cuadrícula.
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================================================
+   2. VARIABLES DE DISEÑO (DESIGN TOKENS & ACCESIBILIDAD CROMÁTICA)
+   Decisión técnica: Centralización de variables CSS (:root) para asegurar
+   coherencia y cumplimiento estricto del ratio de contraste WCAG 2.2 AA
+   (mínimo 4.5:1 para texto normal y 3:1 para componentes de interfaz).
+   ========================================================================== */
+:root {
+  /* Paleta cromática - Entorno SOC de Alta Densidad */
+  --bg-primary: #070d1e;           /* Fondo general (Azul noche ultraseguro) */
+  --bg-surface: #111c38;           /* Paneles y tarjetas principales */
+  --bg-surface-elevated: #1a294f;   /* Elementos interactivos / hover */
+  --bg-input: #0b1428;             /* Fondo de controles de entrada */
+  
+  /* Tipografía y Textos */
+  --text-primary: #f8fafc;         /* Blanco perla (Ratio > 12:1 contra bg-primary) */
+  --text-secondary: #a8b8cc;       /* Slate azulado claro (Ratio > 5.5:1 contra bg-surface) */
+  --text-muted: #cbd5e1;           /* Texto de ayuda y labels informativas */
+  
+  /* Acentos de Interacción y Accesibilidad */
+  --color-accent: #38bdf8;         /* Cyan vibrante para foco e hipervínculos */
+  --color-accent-hover: #0284c7;   /* Cyan oscuro para hover activo */
+  --color-focus: #38bdf8;          /* Anillo de enfoque para teclado (:focus-visible) */
+  --border-color: #24355a;         /* Bordes de división modular */
+
+  /* Semántica de Seguridad y Severidad */
+  --color-success: #22c55e;        /* Mitigado / En línea */
+  --color-warning: #f59e0b;        /* Alerta media / DEFCON */
+  --color-danger: #ef4444;         /* Incidente crítico / Errores */
+  --color-danger-bg: rgba(239, 68, 68, 0.18);
+  --color-warning-bg: rgba(245, 158, 11, 0.18);
+  --color-success-bg: rgba(34, 197, 94, 0.18);
+
+  /* Familias Tipográficas Nativas (Cero dependencias externas) */
+  --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Cascadia Code", "Fira Code", Consolas, "Courier New", monospace;
+
+  /* Escala de Espaciado Modular (Base 4px / 8px) */
+  --sp-xs: 0.25rem;  /* 4px */
+  --sp-sm: 0.5rem;   /* 8px */
+  --sp-md: 1rem;     /* 16px */
+  --sp-lg: 1.5rem;   /* 24px */
+  --sp-xl: 2rem;     /* 32px */
+  --sp-2xl: 3rem;    /* 48px */
+
+  /* Radios de curvatura */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+/* ==========================================================================
+   3. ESTILOS BASE Y REGLAS DE ACCESIBILIDAD UNIVERSAL (WCAG 2.2 AA)
+   ========================================================================== */
+html {
+  font-size: 100%; /* 16px base */
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Utilidades Tipográficas */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+/* Ocultamiento visual accesible para lectores de pantalla (Screen Readers Only) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Estilo de Foco Visible Universal (WCAG 2.4.7 Focus Visible) */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Enlace accesible de salto al contenido principal (WCAG 2.4.1 Bypass Blocks) */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: var(--sp-md);
+  background-color: var(--color-accent);
+  color: var(--bg-primary);
+  padding: var(--sp-sm) var(--sp-md);
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 1000;
+  border-radius: var(--radius-sm);
+  transition: top 0.25s ease-out;
+}
+
+.skip-link:focus {
+  top: var(--sp-md);
+}
+
+/* ==========================================================================
+   4. DISTRIBUCIÓN UNIDIMENSIONAL CON FLEXBOX: ENCABEZADO Y NAVEGACIÓN
+   Decisión técnica: Flexbox es la herramienta óptima para componentes
+   unidimensionales (1D), donde los elementos deben distribuirse en un eje
+   (horizontal o vertical), con alineaciones dinámicas y auto-ajuste de espacio.
+   ========================================================================== */
+.site-header {
+  background-color: var(--bg-surface);
+  border-bottom: 2px solid var(--border-color);
+  padding: var(--sp-md) var(--sp-lg);
+  display: flex;                  /* Flexbox contenedor 1D */
+  flex-direction: column;         /* Móvil primero: orientación vertical */
+  gap: var(--sp-md);
+}
+
+.header-brand {
+  display: flex;                  /* Flexbox para alinear logotipo, texto y badge */
+  align-items: center;
+  gap: var(--sp-md);
+  flex-wrap: wrap;
+}
+
+.soc-logo-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.header-brand h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.header-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.badge-soc {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--color-warning);
+  color: var(--color-warning);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: var(--sp-xs) var(--sp-sm);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+/* Barra de Navegación con Flexbox */
+.main-nav ul {
+  display: flex;                  /* Flexbox para alinear ítems de navegación */
+  list-style: none;
+  gap: var(--sp-xs);
+  flex-wrap: wrap;                /* Envoltorio fluido si la pantalla es estrecha */
+}
+
+.nav-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: var(--sp-sm) var(--sp-md);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  background-color: var(--bg-surface-elevated);
+  color: var(--color-accent);
+}
+
+.nav-link[aria-current="page"] {
+  background-color: var(--bg-surface-elevated);
+  color: var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+/* ==========================================================================
+   5. DISTRIBUCIÓN BIDIMENSIONAL CON CSS GRID: LAYOUT GENERAL Y SECCIONES
+   Decisión técnica: CSS Grid es insustituible para el diseño bidimensional
+   (2D), controlando simultáneamente filas y columnas, evitando anidamientos
+   innecesarios ("divitis") y permitiendo un flujo de contenido ordenado.
+   ========================================================================== */
+.layout-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--sp-md);
+  display: grid;                  /* CSS Grid para arquitectura estructural 2D */
+  grid-template-columns: 1fr;     /* Móvil primero: una sola columna */
+  gap: var(--sp-xl);
+}
+
+
+/* ==========================================================================
+   6. PANELES, SECCIONES Y TABLA DE TELEMETRÍA ACCESIBLE
+   ========================================================================== */
+.panel-section {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--sp-lg);
+}
+
+.panel-header {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--sp-sm);
+  margin-bottom: var(--sp-lg);
+  display: flex;                  /* Flexbox para alinear título y live indicator */
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-xs);
+}
+
+.panel-title {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.panel-description {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin-top: var(--sp-xs);
+  line-height: 1.5;
+  width: 100%;                   /* Se despliega en su propia línea inferior */
+}
+
+/* Indicador de Transmisión en Vivo */
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  font-size: 0.78rem;
+  color: var(--color-success);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  background-color: rgba(34, 197, 94, 0.1);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-success);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-success);
+}
+
+/* Tabla Accesible de Incidentes */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;               /* Permite scroll horizontal asistido en móviles */
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
+.soc-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.soc-table th,
+.soc-table td {
+  padding: var(--sp-sm) var(--sp-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.soc-table thead th {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.76rem;
+  letter-spacing: 0.5px;
+}
+
+.soc-table tbody tr:hover {
+  background-color: rgba(56, 189, 248, 0.05);
+}
+
+.soc-table tbody th {
+  color: var(--color-accent);
+}
+
+/* Etiquetas de Severidad (Doble codificación: ícono + texto para WCAG 1.4.1) */
+.badge-severity {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.severity-critical {
+  background-color: var(--color-danger-bg);
+  color: #fca5a5;
+  border: 1px solid var(--color-danger);
+}
+
+.severity-high {
+  background-color: var(--color-warning-bg);
+  color: #fcd34d;
+  border: 1px solid var(--color-warning);
+}
+
+.severity-medium {
+  background-color: rgba(234, 179, 8, 0.18);
+  color: #fef08a;
+  border: 1px solid #eab308;
+}
+
+.severity-low {
+  background-color: var(--color-success-bg);
+  color: #86efac;
+  border: 1px solid var(--color-success);
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.76rem;
+  font-family: var(--font-mono);
+}
+
+.status-containment {
+  background-color: #3b0764;
+  color: #d8b4fe;
+  border: 1px solid #a855f7;
+}
+
+.status-investigating {
+  background-color: #1e293b;
+  color: #94a3b8;
+  border: 1px solid #64748b;
+}
+
+.status-mitigated {
+  background-color: #064e3b;
+  color: #6ee7b7;
+  border: 1px solid var(--color-success);
+}
+
+.status-closed {
+  background-color: #1e1e24;
+  color: #94a3b8;
+  border: 1px solid #475569;
+}
+
+/* ==========================================================================
+   7. FORMULARIO ACCESIBLE CON CSS GRID Y FLEXBOX
+   Decisión técnica: Se estructuran los campos en sub-cuadrículas con CSS Grid
+   para alinear entradas de 2 columnas de manera consistente y escalable.
+   ========================================================================== */
+.incident-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-xl);
+}
+
+.form-fieldset {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+  background-color: rgba(11, 20, 40, 0.4);
+}
+
+.form-legend {
+  padding: 0 var(--sp-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.form-sub-fieldset {
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-md);
+  margin-top: var(--sp-xs);
+}
+
+.form-sub-legend {
+  padding: 0 var(--sp-xs);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Cuadrícula interna de formulario */
+.form-row {
+  display: grid;                  /* CSS Grid para campos pareados */
+  grid-template-columns: 1fr;     /* Móvil: 1 columna */
+  gap: var(--sp-md);
+}
+
+.form-group {
+  display: flex;                  /* Flexbox vertical para Label + Control + Help */
+  flex-direction: column;
+  gap: var(--sp-xs);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+}
+
+.required-indicator {
+  color: var(--color-danger);
+  font-weight: 700;
+  margin-left: var(--sp-xs);
+}
+
+.form-control {
+  width: 100%;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: var(--sp-sm) var(--sp-md);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  border-color: var(--color-focus);
+}
+
+/* Validación nativa visual complementaria */
+.form-control[aria-invalid="true"] {
+  border-color: #f87171;
+}
+
+.form-control[aria-invalid="false"] {
+  border-color: #4ade80;
+}
+
+.form-help {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.form-help code {
+  background-color: var(--bg-surface-elevated);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+select.form-control {
+  cursor: pointer;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Checkboxes accesibles */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  margin-top: var(--sp-xs);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-sm);
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.checkbox-custodia {
+  background-color: var(--bg-surface-elevated);
+  padding: var(--sp-sm) var(--sp-md);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-accent);
+}
+
+/* Acciones del formulario alineadas con Flexbox */
+.form-actions {
+  display: flex;                  /* Flexbox para alinear botones de acción */
+  gap: var(--sp-md);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: var(--sp-sm);
+}
+
+.btn {
+  display: inline-flex;           /* Flexbox para centrar íconos y textos de botones */
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-sm) var(--sp-lg);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #031525;
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background-color: var(--color-accent-hover);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   8. PANEL LATERAL INFORMATIVO (ASIDE: TELEMETRÍA Y PROTOCOLOS)
+   ========================================================================== */
+.sidebar-panel {
+  display: flex;                  /* Flexbox para apilar tarjetas laterales */
+  flex-direction: column;
+  gap: var(--sp-lg);
+}
+
+.status-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--sp-md);
+}
+
+.status-card-header {
+  display: flex;                  /* Flexbox para alinear título y badges */
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--sp-xs);
+  margin-bottom: var(--sp-md);
+}
+
+.status-card h3 {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.badge-status-online {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-framework {
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+}
+
+/* Elementos de telemetría */
+.metric-item {
+  margin-bottom: var(--sp-md);
+}
+
+.metric-label-row {
+  display: flex;                  /* Flexbox para distribuir etiqueta y valor numérico */
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-xs);
+}
+
+.soc-progress {
+  width: 100%;
+  height: 8px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  appearance: none;
+}
+
+.soc-progress::-webkit-progress-bar {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+}
+
+.soc-progress::-webkit-progress-value {
+  background-color: var(--color-warning);
+}
+
+.soc-progress::-moz-progress-bar {
+  background-color: var(--color-warning);
+}
+
+/* Protocolos de respuesta NIST */
+.card-intro-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--sp-sm);
+}
+
+.protocol-steps {
+  list-style: none;
+  display: flex;                  /* Flexbox vertical para pasos numerados */
+  flex-direction: column;
+  gap: var(--sp-sm);
+}
+
+.protocol-steps li {
+  background-color: var(--bg-primary);
+  border-left: 3px solid var(--color-accent);
+  padding: var(--sp-xs) var(--sp-sm);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.84rem;
+}
+
+.protocol-steps strong {
+  color: var(--text-primary);
+  display: block;
+}
+
+.protocol-steps p {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+/* Contactos de Emergencia */
+.contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  font-size: 0.86rem;
+}
+
+.contact-list li {
+  display: flex;                  /* Flexbox para espaciar contacto y enlace */
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dotted var(--border-color);
+  padding-bottom: var(--sp-xs);
+}
+
+.soc-contact-link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.soc-contact-link:hover,
+.soc-contact-link:focus-visible {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   9. PIE DE PÁGINA INSTITUCIONAL (FOOTER SEMÁNTICO)
+   ========================================================================== */
+.site-footer {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  padding: var(--sp-lg) var(--sp-md);
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;                  /* Flexbox para apilar párrafos del footer directamente */
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-xs);
+}
+
+.site-footer p {
+  max-width: 920px;
+}
+
+.footer-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: var(--sp-xs);
+}
+
+/* ==========================================================================
+   10. MEDIA QUERIES (ESTRATEGIA RESPONSIVA MOBILE-FIRST)
+   Decisión técnica y pedagógica:
+   El diseño base está optimizado para dispositivos móviles (1 columna, flujo
+   vertical y controles táctiles generosos). Mediante Media Queries progresivas
+   adaptamos la interfaz a pantallas intermedias (tablets) y de escritorio (SOC).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   A. BREAKPOINT TABLET / PANTALLA INTERMEDIA (>= 768px)
+   - Cabecera pasa de vertical a horizontal distribuida con justify-content.
+   - Las filas del formulario pasan de 1 a 2 columnas con CSS Grid.
+   -------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+  .site-header {
+    flex-direction: row;          /* Flexbox horizontal */
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .form-row {
+    grid-template-columns: repeat(2, 1fr); /* Cuadrícula de 2 columnas en campos */
+  }
+}
+
+/* --------------------------------------------------------------------------
+   B. BREAKPOINT ESCRITORIO / MONITORES DE OPERACIONES SOC (>= 1024px)
+   - El layout principal pasa a CSS Grid 2D asimétrico (2.4fr para la columna
+     de trabajo principal y 1fr para el panel lateral de monitoreo aside).
+   - Se amplían los márgenes interiores para mayor holgura visual y lectura.
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .layout-container {
+    grid-template-columns: 2.4fr 1fr;      /* Distribución bidimensional principal */
+    grid-template-areas:
+      "monitoreo aside"
+      "registro  aside";
+    padding: var(--sp-xl) var(--sp-lg);
+    gap: var(--sp-xl);
+    align-items: start;
+  }
+
+  #sec-monitoreo {
+    grid-area: monitoreo;
+  }
+
+  #sec-registro {
+    grid-area: registro;
+  }
+
+  .sidebar-panel {
+    grid-area: aside;
+  }
+
+  .site-header {
+    padding: var(--sp-md) var(--sp-xl);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   C. BREAKPOINT PANTALLAS PANORÁMICAS / ULTRA-WIDE (>= 1440px)
+   - Centrado del contenedor maestro con límite de amplitud confortable.
+   -------------------------------------------------------------------------- */
+@media (min-width: 1440px) {
+  .layout-container {
+    max-width: 1480px;
+  }
+}
+
+/* Estados dinámicos del prototipo MVC y feedback visual con jQuery */
+[hidden] { display: none !important; }
+.demo-notice { padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--color-accent); background: rgba(56,189,248,.08); }
+.field-error, [role="alert"] { color: #fca5a5; font-size: 0.82rem; }
+.field-error { display: block; margin-top: .4rem; }
+[role="status"]:not(:empty), [role="alert"]:not(:empty) { margin-block: .8rem; }
+[aria-invalid="true"], .input-error { outline: 2px solid #ef4444; outline-offset: 2px; border-color: #ef4444 !important; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+#incidentes-resumen { margin-block: 1rem; font-weight: 600; color: var(--color-accent); }
+.fila-nueva-animada { background-color: rgba(56, 189, 248, 0.12); transition: background-color 1.5s ease-out; }
+@media (prefers-reduced-motion: reduce) { .pulse-dot { animation: none; } .fila-nueva-animada { transition: none; } }

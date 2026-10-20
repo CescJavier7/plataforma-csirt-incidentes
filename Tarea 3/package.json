@@ -1,0 +1,13 @@
+{
+  "name": "soc-hospitalario",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Fase III: prototipo cliente-servidor con arquitectura en capas",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/server.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
