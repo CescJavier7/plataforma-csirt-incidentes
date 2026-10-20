@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+  CRITICA
+}
+
+enum Estado {
+  ABIERTO
+  EN_PROCESO
+  RESUELTO
+  CERRADO
+}
+
+enum RolUsuario {
+  ADMIN
+  SUPERVISOR
+  ANALISTA
+}
+
+model Usuario {
+  id           Int        @id @default(autoincrement())
+  nombre       String     @db.VarChar(100)
+  email        String     @unique @db.VarChar(120)
+  passwordHash String     @db.VarChar(255)
+  rol          RolUsuario @default(ANALISTA)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@map("usuarios")
+}
+
+model Incidente {
+  id          Int       @id @default(autoincrement())
+  titulo      String    @db.VarChar(120)
+  descripcion String    @db.Text
+  resolucion  String?   @db.Text
+  prioridad   Prioridad @default(MEDIA)
+  estado      Estado    @default(ABIERTO)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("incidentes")
+}

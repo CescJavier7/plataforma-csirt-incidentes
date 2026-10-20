@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Final y Evidencias - Tarea 6</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 15mm 18mm 15mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #1f2937;
+      line-height: 1.45;
+      font-size: 10pt;
+      margin: 0;
+      padding: 0;
+    }
+    .portada {
+      page-break-after: always;
+      text-align: center;
+      padding-top: 70px;
+    }
+    .institucion {
+      font-size: 16pt;
+      font-weight: bold;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .carrera {
+      font-size: 12pt;
+      color: #4b5563;
+      margin-bottom: 40px;
+    }
+    .titulo-doc {
+      font-size: 21pt;
+      font-weight: 800;
+      color: #111827;
+      margin: 30px 0 15px 0;
+      line-height: 1.25;
+    }
+    .subtitulo-doc {
+      font-size: 12pt;
+      color: #2563eb;
+      font-weight: 600;
+      margin-bottom: 60px;
+    }
+    .tarjeta-meta {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 480px;
+      margin: 0 auto;
+      text-align: left;
+      font-size: 9.5pt;
+    }
+    .tarjeta-meta div {
+      margin-bottom: 8px;
+    }
+    .tarjeta-meta strong {
+      color: #1e293b;
+      display: inline-block;
+      width: 140px;
+    }
+
+    /* Secciones */
+    .seccion {
+      margin-top: 20px;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    h1 {
+      color: #1e3a8a;
+      font-size: 15pt;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 4px;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+    h2 {
+      color: #1f2937;
+      font-size: 12pt;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      border-left: 4px solid #2563eb;
+      padding-left: 8px;
+    }
+    h3 {
+      color: #374151;
+      font-size: 10.5pt;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 9px;
+      text-align: justify;
+    }
+    ul, ol {
+      margin-top: 0;
+      margin-bottom: 9px;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 3px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px 0;
+      font-size: 8.5pt;
+    }
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 5px 7px;
+      text-align: left;
+    }
+    th {
+      background-color: #f3f4f6;
+      color: #111827;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+    code {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 8pt;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 7px 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 7.5pt;
+      line-height: 1.35;
+      margin: 5px 0 8px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .alerta {
+      background-color: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 8px 12px;
+      margin: 10px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 9pt;
+    }
+    .badge-pass {
+      color: #15803d;
+      font-weight: bold;
+    }
+    .captura-box {
+      margin: 12px 0 16px 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+    .captura-box img {
+      max-width: 95%;
+      height: auto;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .captura-caption {
+      font-size: 8pt;
+      color: #475569;
+      margin-top: 4px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PORTADA -->
+  <div class="portada">
+    <div class="institucion">Pontificia Universidad Católica del Ecuador</div>
+    <div class="carrera">Desarrollo de Plataformas Web</div>
+    
+    <div class="titulo-doc">INFORME TÉCNICO Y REGISTRO DE EVIDENCIAS</div>
+    <div class="subtitulo-doc">Unidad 6: Seguridad, Autenticación (JWT), Control de Acceso (RBAC), CORS, HTTPS, Sanitización e Integración Cliente-Servidor</div>
+
+    <div class="tarjeta-meta">
+      <div><strong>Asignatura:</strong> Desarrollo de Plataformas</div>
+      <div><strong>Unidad Académica:</strong> Unidad 6 - Seguridad Integral</div>
+      <div><strong>Entorno Evaluado:</strong> Node.js v24.19.0 / Express / Zod / Prisma ORM</div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN PRINCIPAL: INFORME TÉCNICO (800 - 1000 PALABRAS) -->
+  <div class="seccion">
+    <h1>Informe Técnico – Tarea 6</h1>
+    <h2>Seguridad, Autenticación, Autorización e Integración Cliente-Servidor en la Plataforma de Incidentes</h2>
+
+    <h2>1. Introducción</h2>
+    <p>
+      La plataforma de incidentes de las unidades anteriores ofrecía una API REST en Node.js y Express, con persistencia en MySQL mediante Prisma, validación con Zod y manejo centralizado de errores. Sin embargo, la API era completamente pública: cualquier persona que conociera la URL podía consultar, crear, modificar o eliminar incidentes. El objetivo de esta tarea fue reforzar la plataforma con controles de seguridad en varias capas e integrar un cliente web en HTML y JavaScript que consuma la API de forma segura.
+    </p>
+    <p>
+      Las mejoras aplicadas fueron: autenticación con JSON Web Tokens (JWT), autorización por roles (ADMIN, SUPERVISOR y ANALISTA), contraseñas protegidas con bcrypt, CORS restringido, cabeceras seguras con Helmet, limitación de peticiones, validación con Zod y limpieza de entradas con sanitize-html. Todo se verificó con catorce pruebas automatizadas.
+    </p>
+
+    <h2>2. Fallos encontrados (riesgos iniciales)</h2>
+    <p>Tomando como referencia el OWASP Top 10, se identificaron estos riesgos:</p>
+    <ul>
+      <li><strong>Falta de autenticación y de control de acceso (A01 y A07).</strong> Ningún endpoint pedía identificar al usuario. Una petición <code>DELETE /api/incidentes/1</code> enviada desde cualquier cliente borraba el registro. Tampoco había roles para separar funciones.</li>
+      <li><strong>Exposición de datos (A02).</strong> Los incidentes podían leerse libremente y no estaba definido cómo guardar credenciales. Almacenar contraseñas en texto plano habría expuesto a todos los usuarios ante una fuga.</li>
+      <li><strong>Validación incompleta (A03).</strong> Zod verificaba tipos y longitudes, pero aceptaba HTML y JavaScript. Un título <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> se guardaba tal cual y podía provocar un XSS almacenado.</li>
+      <li><strong>CORS permisivo y configuración insegura (A05).</strong> No había política CORS explícita ni cabeceras de seguridad, y la cabecera <code>X-Powered-By: Express</code> revelaba la tecnología del servidor.</li>
+      <li><strong>Sin límites de uso.</strong> El login quedaba expuesto a fuerza bruta y la API aceptaba cuerpos de cualquier tamaño.</li>
+    </ul>
+
+    <h2>3. Mejoras realizadas</h2>
+    <h3>3.1 JWT, roles y bcrypt</h3>
+    <p>
+      Se creó el endpoint <code>POST /api/auth/login</code>. Un esquema Zod estricto exige un correo válido y una contraseña de 8 a 72 caracteres (72 es el máximo que procesa bcrypt) y rechaza campos inesperados, como un <code>rol</code> enviado desde el cliente.
+    </p>
+    <p>
+      Los usuarios están desacoplados del código: las contraseñas se leen de variables de entorno y se persisten mediante siembra (<code>prisma/seed.js</code>) con hashes <strong>bcrypt (costo 10)</strong>, sin credenciales en texto plano. Si un correo no existe, se compara contra un hash señuelo para evitar ataques de tiempo (timing attacks), respondiendo siempre "Credenciales inválidas".
+    </p>
+    <p>
+      Con credenciales correctas se firma un JWT con algoritmo <strong>HS256 fijado explícitamente</strong>, emisor definido, expiración de una hora y solo identificador, correo y rol. El secreto <code>JWT_SECRET</code> se valida al arrancar: si falta o tiene menos de 32 caracteres, la aplicación no inicia.
+    </p>
+    <p>
+      La autorización usa dos middlewares. <code>autenticar</code> verifica la cabecera <code>Authorization: Bearer &lt;token&gt;</code> (firma, algoritmo, emisor y expiración) y responde <strong>401</strong> si algo falla. <code>permitir(...roles)</code> responde <strong>403</strong> si el rol no está autorizado. Las rutas quedaron así: <code>GET</code> para cualquier usuario autenticado, <code>POST</code> para ANALISTA y ADMIN, <code>PUT</code> para SUPERVISOR y ADMIN, y <code>DELETE</code> solo para ADMIN. Una prueba confirmó que cambiar el rol dentro del token invalida la firma y el servidor lo rechaza.
+    </p>
+
+    <h3>3.2 CORS, Helmet y HTTPS</h3>
+    <p>
+      <strong>CORS</strong> solo admite los orígenes de <code>CLIENT_ORIGIN</code> (<code>http://localhost:5500</code>), los métodos GET, POST, PUT y DELETE y las cabeceras <code>Content-Type</code> y <code>Authorization</code>. Un origen no autorizado recibe 403 sin <code>Access-Control-Allow-Origin</code>, por lo que el navegador bloquea la respuesta. El cliente se sirve en un puerto distinto al de la API para probar esta política en condiciones reales.
+    </p>
+    <p>
+      <strong>Helmet</strong> añade CSP, HSTS, <code>X-Content-Type-Options</code> y <code>X-Frame-Options</code>, y se desactivó <code>X-Powered-By</code>. Además se fijaron 300 peticiones cada 15 minutos por IP, 10 intentos fallidos de login en el mismo periodo y un máximo de 10 KB por cuerpo JSON.
+    </p>
+    <p>
+      <strong>HTTPS</strong> no se activó en el entorno local, pero es obligatorio en producción. El JWT viaja en cada petición y, sobre HTTP, cualquiera que intercepte la red (por ejemplo, en una Wi-Fi pública) podría robarlo y suplantar al usuario. TLS cifra el canal, protege la integridad de los mensajes y autentica al servidor. Lo recomendable es un proxy inverso (Nginx o un balanceador) con certificado válido que redirija todo el tráfico HTTP a HTTPS. La aplicación ya habilita <code>trust proxy</code> en producción, y la cabecera HSTS obliga al navegador a usar HTTPS.
+    </p>
+
+    <h3>3.3 Validación y sanitización como defensa en profundidad</h3>
+    <p>
+      Cada petición pasa por este orden: CORS → límite de peticiones → JSON → <strong>sanitize-html</strong> → autenticación → autorización → <strong>Zod</strong> → controlador. El sanitizador elimina todas las etiquetas HTML del cuerpo, descarta por completo el contenido de <code>&lt;script&gt;</code> y bloquea claves como <code>__proto__</code>. Las contraseñas no se modifican, porque solo se comparan con bcrypt. Después, Zod valida el texto ya limpio, así que un título formado solo por código malicioso queda vacío y se rechaza por longitud.
+    </p>
+    <p>
+      El cliente muestra todo el contenido con <code>textContent</code> y plantillas, nunca con <code>innerHTML</code>, y tiene su propia CSP. Por eso, aunque una capa fallara, el texto no se ejecutaría como código. El token se guarda en <code>sessionStorage</code>, que se borra al cerrar la pestaña, y el cliente vuelve al login ante un 401.
+    </p>
+
+    <h2>4. Conclusión</h2>
+    <p>
+      La arquitectura separa con claridad las responsabilidades: el cliente se ocupa de la presentación y el servidor de la seguridad. El cliente oculta los botones que el rol no puede usar, pero eso es solo una ayuda visual: la autorización real la decide el servidor en cada petición. Así lo demostraron los casos en que un ANALISTA intentó eliminar y un SUPERVISOR intentó crear, y ambos recibieron 403.
+    </p>
+    <p>
+      Los contratos entre cliente y servidor son explícitos: los esquemas Zod definen qué datos se aceptan, los códigos HTTP (400, 401, 403, 404, 429) indican cada tipo de error y el manejador centralizado no filtra trazas ni detalles de la base de datos. Con bcrypt, JWT firmado, roles, CORS restringido, cabeceras seguras, validación y sanitización, la plataforma pasó de no tener controles a contar con varias capas independientes que protegen la confidencialidad y la integridad de los incidentes. Las pruebas automatizadas permiten repetir esta verificación después de cualquier cambio.
+    </p>
+  </div>
+
+  <!-- ANEXO TÉCNICO: REGISTRO DE EVIDENCIAS Y PRUEBAS -->
+  <div class="seccion page-break">
+    <h1>Anexo Técnico: Registro de Pruebas y Evidencias</h1>
+
+    <div class="alerta">
+      <strong>Metodología de Verificación:</strong> Banco de 14 pruebas automatizadas sobre la API en ejecución mediante <code>npm test</code> (<code>tests/seguridad.test.js</code>), complementado con capturas de pantalla de la interacción visual e inspección de red.
+    </div>
+
+    <h2>A.1 Matriz de Usuarios y Credenciales de Prueba</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rol</th>
+          <th>Correo Electrónico</th>
+          <th>Contraseña</th>
+          <th>Permisos en API (/api/incidentes)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ADMIN</strong></td>
+          <td><code>admin@incidentes.com</code></td>
+          <td><code>Admin123!</code></td>
+          <td>GET, POST, PUT, DELETE</td>
+        </tr>
+        <tr>
+          <td><strong>SUPERVISOR</strong></td>
+          <td><code>supervisor@incidentes.com</code></td>
+          <td><code>Supervisor123!</code></td>
+          <td>GET, PUT</td>
+        </tr>
+        <tr>
+          <td><strong>ANALISTA</strong></td>
+          <td><code>analista@incidentes.com</code></td>
+          <td><code>Analista123!</code></td>
+          <td>GET, POST</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>A.2 Resumen de Resultados de Pruebas (14/14 Casos Aprobados)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Caso de Prueba</th>
+          <th>Entrada / Método</th>
+          <th>Código Esperado</th>
+          <th>Resultado Obtenido</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Acceso sin token</td>
+          <td><code>GET /api/incidentes</code> (sin auth)</td>
+          <td>401 Unauthorized</td>
+          <td>401 - <code>UNAUTHORIZED</code></td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Permisos insuficientes</td>
+          <td><code>DELETE /api/incidentes/1</code> (Token ANALISTA)</td>
+          <td>403 Forbidden</td>
+          <td>403 - <code>FORBIDDEN</code></td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Datos inválidos en login</td>
+          <td><code>{"email":"correo-invalido","password":"123"}</code></td>
+          <td>400 Bad Request</td>
+          <td>400 - Zod errors en email y password</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Datos inválidos (Creación)</td>
+          <td><code>{"titulo":123,"prioridad":"URGENTE"}</code></td>
+          <td>400 Bad Request</td>
+          <td>400 - Validación de esquema Zod</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Limpieza de entradas (XSS)</td>
+          <td>Título con <code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+          <td>201 Created</td>
+          <td>201 - Persistido sin etiquetas HTML</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Login exitoso</td>
+          <td>Credenciales válidas de ANALISTA</td>
+          <td>200 OK + JWT</td>
+          <td>200 - Token Bearer emitido</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Crear y Consultar</td>
+          <td><code>POST</code> como ANALISTA, luego <code>GET</code></td>
+          <td>201 Created + 200 OK</td>
+          <td>201 & Fila reflejada en tabla</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Actualizar estado</td>
+          <td><code>PUT /api/incidentes/:id</code> como SUPERVISOR</td>
+          <td>200 OK</td>
+          <td>200 - Estado: EN_PROCESO</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Token manipulado (Firma)</td>
+          <td>JWT con payload alterado a ADMIN</td>
+          <td>401 Unauthorized</td>
+          <td>401 - <code>INVALID_TOKEN</code></td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Contraseña incorrecta</td>
+          <td>Correo correcto y clave errónea</td>
+          <td>401 Unauthorized</td>
+          <td>401 - "Credenciales inválidas"</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>SUPERVISOR intenta crear</td>
+          <td><code>POST</code> con token SUPERVISOR</td>
+          <td>403 Forbidden</td>
+          <td>403 - Acción denegada por RBAC</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>CORS restringido</td>
+          <td><code>GET</code> con <code>Origin: http://sitio-malicioso.com</code></td>
+          <td>403 Forbidden</td>
+          <td>403 - Sin cabecera ACAO</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>Cabeceras Helmet</td>
+          <td>Inspección de cabeceras HTTP</td>
+          <td>Headers seguros</td>
+          <td>CSP, HSTS, nosniff presentes</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>Eliminar incidente (ADMIN)</td>
+          <td><code>DELETE /api/incidentes/:id</code> como ADMIN</td>
+          <td>200 OK</td>
+          <td>200 OK, borrado y 404 posterior</td>
+          <td class="badge-pass">PASS</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>A.3 Evidencia Gráfica de la Interfaz Web y Red</h2>
+
+    <div class="captura-box">
+      <img src="capturas/Captura de pantalla 2026-10-10 093250.png" alt="Acceso inicial y validación de login" />
+      <div class="captura-caption">Figura 1: Formulario de inicio de sesión seguro con usuarios de demostración y validación en cliente.</div>
+    </div>
+
+    <div class="captura-box">
+      <img src="capturas/Captura de pantalla 2026-10-10 093435.png" alt="Validación Zod ante datos inválidos" />
+      <div class="captura-caption">Figura 2: Respuesta HTTP 400 con desglose por campo ante correo mal formado y clave corta.</div>
+    </div>
+
+    <div class="captura-box">
+      <img src="capturas/Captura de pantalla 2026-10-10 093553.png" alt="Inspección de cabeceras y token Bearer" />
+      <div class="captura-caption">Figura 3: Consola de red (DevTools) comprobando el preflight OPTIONS de CORS y la cabecera Authorization: Bearer.</div>
+    </div>
+
+    <div class="captura-box">
+      <img src="capturas/Captura de pantalla 2026-10-10 093618.png" alt="Panel de incidentes con rol ANALISTA" />
+      <div class="captura-caption">Figura 4: Interfaz autenticada como ANALISTA: permite registrar incidentes y oculta controles de eliminación.</div>
+    </div>
+
+    <div class="captura-box">
+      <img src="capturas/Captura de pantalla 2026-10-10 094036.png" alt="Actualización de estado como SUPERVISOR" />
+      <div class="captura-caption">Figura 5: Interfaz autenticada como SUPERVISOR: control de estado habilitado y ejecución de actualización exitosa.</div>
+    </div>
+
+    <div class="captura-box">
+      <img src="capturas/Captura de pantalla 2026-10-10 094057.png" alt="Rol ADMIN y eliminación de incidente" />
+      <div class="captura-caption">Figura 6: Interfaz con privilegios de ADMIN: control total CRUD y botón de eliminación habilitado.</div>
+    </div>
+
+    <h2>A.4 Detalle Técnico de los Casos Obligatorios</h2>
+
+    <h3>Caso 1: Acceso sin token</h3>
+    <p><strong>Entrada:</strong> <code>GET /api/incidentes</code> (Sin cabecera Authorization)</p>
+    <pre>HTTP 401 Unauthorized
+{
+  "success": false,
+  "message": "Token de acceso requerido",
+  "error": "UNAUTHORIZED"
+}</pre>
+
+    <h3>Caso 2: Permisos insuficientes (ANALISTA intenta DELETE)</h3>
+    <p><strong>Entrada:</strong> <code>DELETE /api/incidentes/1</code> con cabecera <code>Authorization: Bearer &lt;Token_ANALISTA&gt;</code></p>
+    <pre>HTTP 403 Forbidden
+{
+  "success": false,
+  "message": "Acceso denegado: se requiere uno de los roles [ADMIN]",
+  "error": "FORBIDDEN"
+}</pre>
+
+    <h3>Caso 3: Datos inválidos en login</h3>
+    <p><strong>Entrada:</strong> <code>POST /api/auth/login</code> con cuerpo erróneo:</p>
+    <pre>{ "email": "correo-sin-arroba", "password": "123" }
+
+HTTP 400 Bad Request
+{
+  "success": false,
+  "message": "Datos de entrada inválidos",
+  "errors": [
+    { "campo": "email", "mensaje": "El correo no tiene un formato válido" },
+    { "campo": "password", "mensaje": "La contraseña debe tener al menos 8 caracteres" }
+  ]
+}</pre>
+
+    <h3>Caso 4: Datos inválidos en creación de incidente</h3>
+    <p><strong>Entrada:</strong> <code>POST /api/incidentes</code> con datos ausentes y tipos erróneos:</p>
+    <pre>{ "titulo": 123, "prioridad": "URGENTE" }
+
+HTTP 400 Bad Request
+{
+  "success": false,
+  "message": "Datos de entrada inválidos",
+  "errors": [
+    { "campo": "titulo", "mensaje": "El título debe ser texto" },
+    { "campo": "descripcion", "mensaje": "La descripción es obligatoria" },
+    { "campo": "prioridad", "mensaje": "La prioridad debe ser BAJA, MEDIA, ALTA o CRITICA" }
+  ]
+}</pre>
+
+    <h3>Caso 5: Limpieza y Saneamiento de Entradas (XSS Prevention)</h3>
+    <p><strong>Entrada:</strong> <code>POST /api/incidentes</code> inyectando código HTML y script:</p>
+    <pre>{
+  "titulo": "&lt;script&gt;alert(\\"XSS\\")&lt;/script&gt;Caída del servidor web",
+  "descripcion": "&lt;img src=x onerror=\\"alert(1)\\"&gt;El portal no responde &lt;b&gt;desde las 8:00&lt;/b&gt;",
+  "prioridad": "ALTA"
+}
+
+HTTP 201 Created (Persistido sin etiquetas)
+{
+  "id": 2,
+  "titulo": "Caída del servidor web",
+  "descripcion": "El portal no responde desde las 8:00",
+  "prioridad": "ALTA",
+  "estado": "ABIERTO"
+}</pre>
+
+    <h3>Caso 6: Flujo exitoso de Login</h3>
+    <p><strong>Entrada:</strong> <code>POST /api/auth/login</code> con credenciales de <code>analista@incidentes.com</code></p>
+    <pre>HTTP 200 OK
+{
+  "success": true,
+  "message": "Inicio de sesión exitoso",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "tipo": "Bearer",
+    "usuario": { "id": 3, "nombre": "Laura Analista", "email": "analista@incidentes.com", "rol": "ANALISTA" }
+  }
+}</pre>
+
+    <h3>Caso 7: Flujo exitoso de Crear y Consultar Incidente</h3>
+    <p><strong>Entrada:</strong> Creación como ANALISTA y listado con <code>GET /api/incidentes</code></p>
+    <pre>HTTP 201 Created (Creación de incidente)
+{ "id": 3, "titulo": "Fallo en VPN corporativa", "prioridad": "CRITICA", "estado": "ABIERTO" }
+
+HTTP 200 OK (Consulta GET)
+Total: 3 incidentes. La fila se renderizó en la tabla HTML mediante textContent de forma segura.</pre>
+
+    <h3>Caso 8: Flujo exitoso de Actualización por SUPERVISOR</h3>
+    <p><strong>Entrada:</strong> <code>PUT /api/incidentes/3</code> con <code>{ "estado": "EN_PROCESO" }</code> portando token con rol SUPERVISOR.</p>
+    <pre>HTTP 200 OK
+{
+  "success": true,
+  "message": "Incidente actualizado exitosamente",
+  "data": { "id": 3, "titulo": "Fallo en VPN corporativa", "estado": "EN_PROCESO" }
+}</pre>
+  </div>
+
+</body>
+</html>

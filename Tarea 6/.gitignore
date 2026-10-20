@@ -1,0 +1,17 @@
+# Dependencias
+node_modules/
+
+# Entorno y credenciales confidenciales
+.env
+.env.local
+.env.*.local
+
+# Herramientas del IDE y logs
+.antigravity/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

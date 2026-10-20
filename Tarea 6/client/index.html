@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- CSP del cliente: solo scripts/estilos propios y conexiones a la API configurada -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' http://localhost:3000 https://localhost:3000; base-uri 'self'; form-action 'self'; object-src 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Plataforma de Incidentes · Acceso seguro</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="barra">
+    <h1>Plataforma de Incidentes</h1>
+    <div id="sesion" class="sesion" hidden>
+      <span id="sesion-usuario"></span>
+      <span id="sesion-rol" class="insignia"></span>
+      <button id="btn-logout" type="button" class="btn secundario">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Mensajes globales (renderizados con textContent) -->
+    <div id="mensaje" class="mensaje" role="status" aria-live="polite" hidden></div>
+
+    <!-- ===================== LOGIN ===================== -->
+    <section id="vista-login" class="tarjeta login">
+      <h2>Iniciar sesión</h2>
+      <form id="form-login" novalidate>
+        <label for="login-email">Correo</label>
+        <input id="login-email" name="email" type="email" autocomplete="username" required maxlength="120" />
+
+        <label for="login-password">Contraseña</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="72" />
+
+        <button type="submit" class="btn">Entrar</button>
+      </form>
+
+      <details class="demo">
+        <summary>Usuarios de demostración</summary>
+        <ul>
+          <li><code>admin@incidentes.com</code> / <code>Admin123!</code> (ADMIN)</li>
+          <li><code>supervisor@incidentes.com</code> / <code>Supervisor123!</code> (SUPERVISOR)</li>
+          <li><code>analista@incidentes.com</code> / <code>Analista123!</code> (ANALISTA)</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ===================== PANEL ===================== -->
+    <section id="vista-panel" hidden>
+      <!-- Crear incidente: ANALISTA, ADMIN -->
+      <article id="bloque-crear" class="tarjeta" data-roles="ANALISTA,ADMIN">
+        <h2>Registrar incidente</h2>
+        <form id="form-crear" novalidate>
+          <label for="crear-titulo">Título</label>
+          <input id="crear-titulo" name="titulo" type="text" required minlength="5" maxlength="120" />
+
+          <label for="crear-descripcion">Descripción</label>
+          <textarea id="crear-descripcion" name="descripcion" rows="3" required minlength="10"></textarea>
+
+          <div class="fila">
+            <div>
+              <label for="crear-prioridad">Prioridad</label>
+              <select id="crear-prioridad" name="prioridad">
+                <option value="BAJA">BAJA</option>
+                <option value="MEDIA" selected>MEDIA</option>
+                <option value="ALTA">ALTA</option>
+                <option value="CRITICA">CRITICA</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn">Crear</button>
+        </form>
+      </article>
+
+      <!-- Listado -->
+      <article class="tarjeta">
+        <div class="cabecera-tabla">
+          <h2>Incidentes</h2>
+          <div class="filtros">
+            <label for="filtro-estado">Estado</label>
+            <select id="filtro-estado">
+              <option value="">Todos</option>
+              <option value="ABIERTO">ABIERTO</option>
+              <option value="EN_PROCESO">EN_PROCESO</option>
+              <option value="RESUELTO">RESUELTO</option>
+              <option value="CERRADO">CERRADO</option>
+            </select>
+            <button id="btn-refrescar" type="button" class="btn secundario">Refrescar</button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Descripción</th>
+              <th>Prioridad</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-incidentes"></tbody>
+        </table>
+        <p id="tabla-vacia" class="vacio" hidden>No hay incidentes registrados.</p>
+      </article>
+    </section>
+  </main>
+
+  <!-- Plantilla de fila: se clona y se rellena con textContent (sin innerHTML) -->
+  <template id="tpl-fila">
+    <tr>
+      <td data-campo="id"></td>
+      <td data-campo="titulo"></td>
+      <td data-campo="descripcion"></td>
+      <td><span data-campo="prioridad" class="insignia"></span></td>
+      <td>
+        <select data-campo="estado" aria-label="Estado del incidente">
+          <option value="ABIERTO">ABIERTO</option>
+          <option value="EN_PROCESO">EN_PROCESO</option>
+          <option value="RESUELTO">RESUELTO</option>
+          <option value="CERRADO">CERRADO</option>
+        </select>
+      </td>
+      <td class="acciones">
+        <button type="button" class="btn pequeno" data-accion="actualizar" data-roles="SUPERVISOR,ADMIN">Guardar estado</button>
+        <button type="button" class="btn pequeno peligro" data-accion="eliminar" data-roles="ADMIN">Eliminar</button>
+      </td>
+    </tr>
+  </template>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
+
