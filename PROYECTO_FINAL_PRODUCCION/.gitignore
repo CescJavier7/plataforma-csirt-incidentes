@@ -20,3 +20,6 @@ Thumbs.db
 .vscode/
 .idea/
 
+
+# Certificados locales de conexión a la base (en Render se cargan como Secret File)
+certs/

@@ -137,15 +137,19 @@ app.get('/api/health', healthHandler);
 // 8.1 Endpoint de disponibilidad con base de datos (Readiness Check - SKILL.md Fase 2.2)
 const readyHandler = async (req, res) => {
   try {
+    // Solo se informa "connected" si realmente se ejecutó la consulta contra MySQL;
+    // en modo memoria no existe base de datos que verificar.
+    let estadoBaseDatos = 'not_configured';
     if (prisma) {
       await prisma.$queryRawUnsafe('SELECT 1');
+      estadoBaseDatos = 'connected';
     }
     return res.status(200).json({
       status: 'READY',
       timestamp: new Date().toISOString(),
       services: {
         api: 'healthy',
-        database: 'connected',
+        database: estadoBaseDatos,
       },
       uptime: Number(process.uptime().toFixed(2)),
       persistence: env.persistence,
