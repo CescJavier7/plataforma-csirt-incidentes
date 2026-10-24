@@ -13,7 +13,7 @@ process.env.ANALISTA_PASSWORD = 'test-analista-password-not-for-production';
 
 const app = require('../src/app');
 
-describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad.md)', () => {
+describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad.md / SKILL.md)', () => {
   let server;
   let baseUrl;
   let tokenAdmin;
@@ -36,11 +36,22 @@ describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad
     await new Promise((resolve) => server.close(resolve));
   });
 
-  test('1. Healthcheck público responde estado "ok" con timestamp (Sección 3.6)', async () => {
+  test('1. Healthcheck público responde estado "ok" y status "UP" con timestamp (SKILL.md 2.1)', async () => {
     const res = await fetch(`${baseUrl}/health`);
     assert.equal(res.status, 200);
     const data = await res.json();
     assert.equal(data.estado, 'ok');
+    assert.equal(data.status, 'UP');
+    assert.equal(data.services.api, 'healthy');
+    assert.ok(data.timestamp);
+  });
+
+  test('1.1 Readiness check responde 200 con base de datos conectada (SKILL.md 2.2)', async () => {
+    const res = await fetch(`${baseUrl}/ready`);
+    assert.equal(res.status, 200);
+    const data = await res.json();
+    assert.equal(data.status, 'READY');
+    assert.equal(data.services.database, 'connected');
     assert.ok(data.timestamp);
   });
 

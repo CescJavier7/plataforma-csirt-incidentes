@@ -1,7 +1,8 @@
 /**
- * Middleware y Utilidad de Auditoría y Trazabilidad de Seguridad (OWASP A09)
- * Registra cada acción relevante con IP, acción, usuario autenticado, método y timestamp.
+ * Middleware y Utilidad de Auditoría y Trazabilidad de Seguridad (OWASP A09 / SKILL.md Fase 2.3)
+ * Registra cada acción relevante con timestamp, correlationId, IP, usuario, acción, método, status y responseTimeMs.
  */
+const crypto = require('crypto');
 
 function obtenerIpCliente(req) {
   const forwarded = req.headers['x-forwarded-for'];
@@ -11,22 +12,32 @@ function obtenerIpCliente(req) {
   return req.ip || req.socket?.remoteAddress || '127.0.0.1';
 }
 
-function registrarLogSeguridad({ ip, accion, usuario, metodo, ruta, estado, detalles }) {
+function registrarLogSeguridad({ ip, accion, usuario, metodo, ruta, estado, correlationId, responseTimeMs, detalles }) {
   const timestamp = new Date().toISOString();
   const identUsuario = usuario
     ? `${usuario.email || usuario.nombre || 'ID:' + usuario.id} [${usuario.rol || 'USER'}]`
     : 'ANONYMOUS';
 
-  const logLine = `[AUDIT_LOG] ${timestamp} | IP: ${ip} | USER: ${identUsuario} | ACTION: ${accion} | ${metodo || ''} ${ruta || ''} | STATUS: ${estado || 200}${detalles ? ' | ' + detalles : ''}`;
+  const cid = correlationId || 'N/A';
+  const duration = responseTimeMs !== undefined ? `${responseTimeMs}ms` : '0ms';
+  const logLine = `[AUDIT_LOG] ${timestamp} | CORRELATION_ID: ${cid} | IP: ${ip} | USER: ${identUsuario} | ACTION: ${accion} | ${metodo || ''} ${ruta || ''} | STATUS: ${estado || 200} | DURATION: ${duration}${detalles ? ' | ' + detalles : ''}`;
 
   console.log(logLine);
 }
 
 function auditMiddleware(req, res, next) {
   const ip = obtenerIpCliente(req);
+  const startTime = process.hrtime.bigint();
+  const correlationId = req.headers['x-correlation-id'] || req.headers['x-request-id'] || crypto.randomUUID();
+  req.correlationId = correlationId;
+  res.setHeader('X-Correlation-ID', correlationId);
 
+  // Interceptar la finalización de la respuesta para auditar el código de estado
   res.on('finish', () => {
+    // Solo auditar rutas de API relevantes
     if (req.originalUrl.startsWith('/api')) {
+      const endTime = process.hrtime.bigint();
+      const responseTimeMs = Number((endTime - startTime) / 1000000n);
       const usuario = req.usuario || null;
       let accion = `${req.method}_${req.baseUrl || req.path}`;
 
@@ -35,7 +46,7 @@ function auditMiddleware(req, res, next) {
       } else if (req.originalUrl.startsWith('/api/incidentes')) {
         switch (req.method) {
           case 'GET':
-            accion = req.params.id ? 'READ_INCIDENT_DETAIL' : 'LIST_INCIDENTS';
+            accion = req.params?.id ? 'READ_INCIDENT_DETAIL' : 'LIST_INCIDENTS';
             break;
           case 'POST':
             accion = 'CREATE_INCIDENT';
@@ -50,6 +61,7 @@ function auditMiddleware(req, res, next) {
         }
       }
 
+      // Si el acceso fue bloqueado
       if (res.statusCode === 401) {
         accion = accion.includes('LOGIN') ? accion : 'UNAUTHORIZED_ACCESS_ATTEMPT';
       } else if (res.statusCode === 403) {
@@ -63,6 +75,8 @@ function auditMiddleware(req, res, next) {
         metodo: req.method,
         ruta: req.originalUrl,
         estado: res.statusCode,
+        correlationId,
+        responseTimeMs,
       });
     }
   });
@@ -75,4 +89,3 @@ module.exports = {
   registrarLogSeguridad,
   obtenerIpCliente,
 };
-

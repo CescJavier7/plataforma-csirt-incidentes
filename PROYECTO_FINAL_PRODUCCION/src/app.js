@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const env = require('./config/env');
+const prisma = require('./config/prisma');
 const { auditMiddleware } = require('./middlewares/audit.middleware');
 const errorHandler = require('./middlewares/error.middleware');
 
@@ -62,7 +63,9 @@ app.use(
       return callback(err);
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Correlation-ID'],
+    exposedHeaders: ['X-Correlation-ID'],
+    credentials: true,
   })
 );
 
@@ -92,7 +95,7 @@ const limitadorAutenticacion = rateLimit({
   },
 });
 
-// 6. Auditoría y Trazabilidad de Seguridad (Recomendación 7: IP, acción, usuario, timestamp)
+// 6. Auditoría y Trazabilidad de Seguridad (OWASP A09 / SKILL.md Fase 2.3)
 app.use(auditMiddleware);
 
 // 7. Servir estáticos del cliente (SPA) con cabeceras de caché optimizadas
@@ -109,16 +112,56 @@ app.use(
   })
 );
 
-// 8. Endpoint de verificación de estado (Health Check)
+// 8. Endpoint de verificación de estado (Health Check - SKILL.md Fase 2.1)
 const healthHandler = (req, res) => {
   res.status(200).json({
+    status: 'UP',
     estado: 'ok',
-    persistence: env.persistence,
     timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    environment: env.nodeEnv,
+    services: {
+      api: 'healthy',
+    },
+    uptime: Number(process.uptime().toFixed(2)),
+    persistence: env.persistence,
   });
 };
 app.get('/health', healthHandler);
 app.get('/api/health', healthHandler);
+
+// 8.1 Endpoint de disponibilidad con base de datos (Readiness Check - SKILL.md Fase 2.2)
+const readyHandler = async (req, res) => {
+  try {
+    if (prisma) {
+      await prisma.$queryRawUnsafe('SELECT 1');
+    }
+    return res.status(200).json({
+      status: 'READY',
+      timestamp: new Date().toISOString(),
+      services: {
+        api: 'healthy',
+        database: 'connected',
+      },
+      uptime: Number(process.uptime().toFixed(2)),
+      persistence: env.persistence,
+    });
+  } catch (err) {
+    console.error('[DATABASE_READINESS_ERROR] Error en verificación de base de datos:', err.message);
+    return res.status(503).json({
+      status: 'UNAVAILABLE',
+      timestamp: new Date().toISOString(),
+      services: {
+        api: 'healthy',
+        database: 'disconnected',
+      },
+      uptime: Number(process.uptime().toFixed(2)),
+      persistence: env.persistence,
+    });
+  }
+};
+app.get('/ready', readyHandler);
+app.get('/api/ready', readyHandler);
 
 // 9. Rutas del sistema
 app.use('/api/auth', limitadorAutenticacion, require('./routes/auth.routes'));
