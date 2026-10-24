@@ -104,7 +104,9 @@
       </article>
 
       <!-- Catálogo de Incidentes -->
-      <article class="tarjeta">
+      <!-- RESPONSIVE: la clase "bandeja" permite que esta tarjeta ocupe todo el ancho
+           en la cuadrícula de 2 columnas de escritorio (>= 1024px) -->
+      <article class="tarjeta bandeja">
         <div class="cabecera-tabla">
           <h2>Bandeja de Incidentes Registrados</h2>
           <div class="filtros">
@@ -126,8 +128,8 @@
           </div>
         </div>
 
-        <div style="overflow-x: auto;">
-          <table>
+        <div class="tabla-contenedor" style="overflow-x: auto;">
+          <table class="tabla-incidentes">
             <thead>
               <tr>
                 <th style="width: 70px;">ID</th>
@@ -149,11 +151,13 @@
   <!-- Template para Fila de Incidente -->
   <template id="tpl-fila">
     <tr>
-      <td data-campo="id" style="font-weight: 700; color: #38bdf8;"></td>
-      <td data-campo="titulo" style="font-weight: 600;"></td>
-      <td data-campo="descripcion"></td>
-      <td><span data-campo="prioridad" class="insignia"></span></td>
-      <td>
+      <!-- RESPONSIVE: data-label alimenta el encabezado de cada celda (td::before)
+           cuando la tabla se convierte en tarjetas apiladas en pantallas <= 768px -->
+      <td data-label="ID" data-campo="id" style="font-weight: 700; color: #38bdf8;"></td>
+      <td data-label="Título" data-campo="titulo" style="font-weight: 600;"></td>
+      <td data-label="Descripción" data-campo="descripcion"></td>
+      <td data-label="Prioridad"><span data-campo="prioridad" class="insignia"></span></td>
+      <td data-label="Estado">
         <select data-campo="estado" aria-label="Estado del incidente">
           <option value="ABIERTO">ABIERTO</option>
           <option value="EN_PROCESO">EN_PROCESO</option>
@@ -161,7 +165,7 @@
           <option value="CERRADO">CERRADO</option>
         </select>
       </td>
-      <td class="acciones">
+      <td data-label="Acciones" class="acciones">
         <button type="button" class="btn pequeno" data-accion="actualizar" data-roles="SUPERVISOR,ADMIN">Guardar</button>
         <button type="button" class="btn pequeno peligro" data-accion="eliminar" data-roles="ADMIN">Eliminar</button>
       </td>
