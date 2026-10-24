@@ -46,12 +46,13 @@ describe('Pruebas de Integración y Seguridad Defensiva (OWASP / skill_seguridad
     assert.ok(data.timestamp);
   });
 
-  test('1.1 Readiness check responde 200 con base de datos conectada (SKILL.md 2.2)', async () => {
+  test('1.1 Readiness check responde 200 e informa que en modo memoria no hay base configurada (SKILL.md 2.2)', async () => {
     const res = await fetch(`${baseUrl}/ready`);
     assert.equal(res.status, 200);
     const data = await res.json();
     assert.equal(data.status, 'READY');
-    assert.equal(data.services.database, 'connected');
+    assert.equal(data.persistence, 'memory');
+    assert.equal(data.services.database, 'not_configured');
     assert.ok(data.timestamp);
   });
 
