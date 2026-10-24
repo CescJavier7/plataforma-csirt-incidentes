@@ -60,11 +60,11 @@ module.exports = {
   CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
   clientOrigins: (process.env.CLIENT_ORIGIN || '')
     .split(',')
-    .map((o) => o.trim())
+    .map((o) => o.trim().replace(/\/+$/, ''))
     .filter(Boolean),
   CLIENT_ORIGINS: (process.env.CLIENT_ORIGIN || '')
     .split(',')
-    .map((o) => o.trim())
+    .map((o) => o.trim().replace(/\/+$/, ''))
     .filter(Boolean),
   nodeEnv: process.env.NODE_ENV || 'development',
   NODE_ENV: process.env.NODE_ENV || 'development',

@@ -50,13 +50,17 @@ app.use(
   })
 );
 
-// 2. CORS restringido a origen autorizado
+// 2. CORS restringido a origen autorizado (con normalización de barras y soporte multiorigen)
 app.use(
   cors({
     origin(origin, callback) {
       if (!origin) return callback(null, true);
-      const permitidos = env.clientOrigins.length ? env.clientOrigins : [env.clientOrigin];
-      if (permitidos.includes(origin)) return callback(null, true);
+      const normalizedOrigin = origin.replace(/\/+$/, '').toLowerCase();
+      const permitidos = (env.clientOrigins.length ? env.clientOrigins : [env.clientOrigin])
+        .map((o) => (o || '').trim().replace(/\/+$/, '').toLowerCase())
+        .filter(Boolean);
+
+      if (permitidos.includes(normalizedOrigin)) return callback(null, true);
       const err = new Error(`Origen no permitido por CORS: ${origin}`);
       err.statusCode = 403;
       err.code = 'CORS_NOT_ALLOWED';
