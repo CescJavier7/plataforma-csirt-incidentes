@@ -5,6 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
+    "build": "prisma generate",
+    "start:render": "node -e \"if(process.env.PERSISTENCE==='prisma'){require('child_process').execSync('npx prisma migrate deploy && node prisma/seed.js',{stdio:'inherit'})}\" && node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "node --test tests/*.test.js",
     "prisma:generate": "prisma generate",
@@ -36,12 +38,11 @@
     "express-rate-limit": "^8.7.1",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
+    "prisma": "^6.4.1",
     "sanitize-html": "^2.18.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
-    "prisma": "^6.4.1"
+    "nodemon": "^3.1.9"
   }
 }
-

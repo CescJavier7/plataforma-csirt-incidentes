@@ -24,3 +24,4 @@ Si la conexión en vivo al servicio en la nube experimenta latencia o caída del
 2. **Entorno local de réplica**: Demostrar la ejecución idéntica mediante `PROYECTO_FINAL_PRODUCCION` en memoria o Docker local (`docker compose up -d`).
 3. **Trazabilidad y Logs**: Exhibir los logs estructurados con `CORRELATION_ID` y códigos HTTP 401/403/200 capturados en las pruebas de integración.
 4. **Validación del Contrato**: Demostrar mediante cURL o `scripts/verificar-entrega.js` la respuesta unívoca del servidor.
+
