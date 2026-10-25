@@ -95,6 +95,10 @@ Cada cuenta tiene uno de estos tres perfiles. Tu perfil determina qué botones y
 
 ## 4. Recorrido de la interfaz
 
+> [!NOTE]
+> Las capturas de este manual se tomaron en la plataforma real. Los recuadros naranjas no forman parte de la
+> interfaz: se añadieron para señalar el elemento del que habla cada paso.
+
 ![Panel principal con formulario, topología y bandeja](../evidencias/capturas/manual-03-panel-principal.png)
 
 La pantalla principal tiene estas zonas:
@@ -234,7 +238,7 @@ caracteres».
 3. Lee la confirmación «¿Confirma la eliminación del incidente #N? Esta acción no se puede deshacer.».
 4. Pulsa **Aceptar** para eliminarlo o **Cancelar** para conservarlo.
 
-![Ventana de confirmación antes de eliminar un incidente](../evidencias/capturas/manual-08-eliminar.png)
+![Botón Eliminar en la fila de un incidente (solo Administrador)](../evidencias/capturas/manual-08-eliminar.png)
 
 > [!WARNING]
 > **La eliminación es permanente.** El incidente no se puede recuperar desde la plataforma. Antes de eliminar,
